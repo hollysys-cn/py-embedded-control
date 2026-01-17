@@ -42,12 +42,12 @@
 
 ### 4. 快速启动脚本
 
-- ✅ [debug-container.ps1](../debug-container.ps1) - Windows PowerShell 脚本
+- ✅ [debug-container.ps1](../../scripts/debug-container.ps1) - Windows PowerShell 脚本
   - 支持 x86_64 和 ARM64 平台
   - 可选择是否重新构建镜像
   - 可直接运行示例并等待调试器
 
-- ✅ [debug-container.sh](../debug-container.sh) - Linux/macOS Bash 脚本
+- ✅ [debug-container.sh](../../scripts/debug-container.sh) - Linux/macOS Bash 脚本
   - 功能与 PowerShell 脚本相同
   - 跨平台支持
 
@@ -89,12 +89,12 @@
 
 **Windows**:
 ```powershell
-.\debug-container.ps1
+.\scripts\debug-container.ps1
 ```
 
 **Linux/macOS**:
 ```bash
-./debug-container.sh
+./scripts/debug-container.sh
 ```
 
 **预期结果**:

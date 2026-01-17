@@ -465,7 +465,7 @@ docker exec -it plcopen-dev strace -f -e trace=all bin/plcopen_runtime --config 
 
 | 场景 | 推荐方法 | 命令 |
 |------|---------|------|
-| 快速开始 | 使用启动脚本 | `.\debug-container.ps1` 或 `./debug-container.sh` |
+| 快速开始 | 使用启动脚本 | `.\scripts\debug-container.ps1` 或 `./scripts/debug-container.sh` |
 | Python 开发 | VS Code Dev Container | 在 VS Code 中重新打开 |
 | C/C++ 开发 | gdbserver + VS Code | `gdbserver :9000 bin/plcopen_runtime` |
 | 混合调试 | 复合调试配置 | 选择 "混合调试: Python + C++" |

@@ -33,14 +33,11 @@
 
 | 文件 | 说明 |
 |------|------|
-| `start-debug.ps1` | Windows 一键启动调试脚本 |
-| `start-debug.sh` | Linux/macOS 一键启动调试脚本 |
+| `start-debug.ps1` | Windows 一键启动调试脚本（常用）⭐ |
+| `start-debug.sh` | Linux/macOS 一键启动调试脚本（常用）⭐ |
 | `build.ps1` | Windows 构建脚本 |
 | `run.ps1` | Windows 运行脚本 |
-| `debug-container.ps1` | Windows 容器调试脚本 |
-| `debug-container.sh` | Linux/macOS 容器调试脚本 |
-| `verify-debug-setup.ps1` | 调试环境验证脚本 |
-| `scripts/` | 其他辅助脚本目录 |
+| `scripts/` | 辅助脚本目录（版权检查、验证、容器调试等）|
 
 ### 配置目录
 
@@ -96,11 +93,15 @@ cat README.md
 # 查看文档导航
 cat docs/README.md
 
-# Windows 一键调试
+# Windows 一键调试（最常用！）
 .\start-debug.ps1
 
 # Linux/macOS 一键调试
 ./start-debug.sh
+
+# 容器调试（辅助脚本）
+.\scripts\debug-container.ps1    # Windows
+./scripts/debug-container.sh     # Linux/macOS
 ```
 
 ### 构建和测试

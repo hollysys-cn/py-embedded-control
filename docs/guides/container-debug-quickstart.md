@@ -9,14 +9,14 @@
 #### Windows (PowerShell)
 
 ```powershell
-.\debug-container.ps1
+.\scripts\debug-container.ps1
 ```
 
 #### Linux/macOS (Bash)
 
 ```bash
-chmod +x debug-container.sh
-./debug-container.sh
+chmod +x scripts/debug-container.sh
+./scripts/debug-container.sh
 ```
 
 ### 步骤 2: 在容器中启动调试服务器
