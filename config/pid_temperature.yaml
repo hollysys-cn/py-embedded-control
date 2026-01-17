@@ -1,0 +1,18 @@
+# PID 温度控制示例配置
+
+# 日志配置
+logging:
+  level: INFO           # DEBUG, INFO, WARNING, ERROR
+  file: logs/pid_temperature.log
+  max_size: 1048576     # 1 MB
+
+# 调度器配置
+scheduler:
+  cycle_time_ms: 100    # 100ms 控制周期
+  timeout_ms: 50        # 超时检测阈值
+  max_jitter_ms: 5      # 最大允许抖动
+
+# Python 脚本配置
+script:
+  path: python/examples/pid_temperature.py
+  # init 和 step 函数在脚本中定义

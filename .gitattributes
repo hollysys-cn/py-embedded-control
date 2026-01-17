@@ -1,0 +1,30 @@
+# 强制使用 LF 行尾（所有文本文件）
+* text=auto eol=lf
+
+# 源代码文件强制 UTF-8 无 BOM
+*.c text eol=lf
+*.h text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf
+
+# Makefile 必须使用 tab
+Makefile text eol=lf
+
+# 二进制文件不进行转换
+*.so binary
+*.a binary
+*.o binary
+*.exe binary
+*.dll binary
+*.dylib binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

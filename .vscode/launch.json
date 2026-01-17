@@ -1,0 +1,167 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: 附加到运行时（本地）",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python",
+                    "remoteRoot": "${workspaceFolder}/python"
+                }
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Python: 附加到 Docker 容器 (x86_64)",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/workspace"
+                }
+            ],
+            "justMyCode": false,
+            "logToFile": true
+        },
+        {
+            "name": "Python: 附加到 Docker 容器 (ARM64)",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5679
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/workspace"
+                }
+            ],
+            "justMyCode": false,
+            "logToFile": true
+        },
+        {
+            "name": "Python: 启动 PID 温度控制示例",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/examples/pid_temperature.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/python:${workspaceFolder}/src/python_bindings"
+            }
+        },
+        {
+            "name": "Python: 启动基础 PID 示例",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/examples/basic_pid.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/python:${workspaceFolder}/src/python_bindings"
+            }
+        },
+        {
+            "name": "Python: 启动 debugpy 服务器",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/debug_server.py",
+            "args": ["--host", "0.0.0.0", "--port", "5678", "--wait"],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: 附加到远程设备",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "192.168.1.100",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python",
+                    "remoteRoot": "/opt/plcopen/python"
+                }
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "C++: 调试运行时 (gdb)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/plcopen_runtime",
+            "args": ["--config", "config/pid_temperature.yaml"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PYTHONPATH",
+                    "value": "${workspaceFolder}/python:${workspaceFolder}/src/python_bindings"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "build"
+        },
+        {
+            "name": "C++: 附加到容器中的进程 (gdbserver)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/plcopen_runtime",
+            "miDebuggerServerAddress": "localhost:9000",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "sourceFileMap": {
+                "/workspace": "${workspaceFolder}"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "混合调试: Python + C++",
+            "configurations": [
+                "Python: 附加到 Docker 容器 (x86_64)",
+                "C++: 附加到容器中的进程 (gdbserver)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "debug",
+                "order": 1
+            }
+        }
+    ]
+}

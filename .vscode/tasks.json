@@ -1,0 +1,152 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Docker: 启动开发容器",
+            "type": "shell",
+            "command": "docker-compose up -d dev",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Docker: 停止开发容器",
+            "type": "shell",
+            "command": "docker-compose down dev",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: 重启开发容器",
+            "type": "shell",
+            "command": "docker-compose restart dev",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: 构建并启动容器",
+            "type": "shell",
+            "command": "docker-compose up -d --build dev",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Docker: 查看容器日志",
+            "type": "shell",
+            "command": "docker-compose logs -f dev",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Docker: 进入容器 Shell",
+            "type": "shell",
+            "command": "docker exec -it plcopen-dev bash",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "容器: 构建项目",
+            "type": "shell",
+            "command": "docker exec plcopen-dev bash -c 'cd /workspace && python3 setup.py build_ext --inplace && make runtime'",
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "容器: 运行 PID 示例",
+            "type": "shell",
+            "command": "docker exec -it plcopen-dev python3 /workspace/python/examples/pid_temperature.py",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "容器: 启动 Python 调试服务器",
+            "type": "shell",
+            "command": "docker exec -it plcopen-dev python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client /workspace/python/examples/pid_temperature.py",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": false
+            }
+        },
+        {
+            "label": "容器: 启动 gdbserver (C 调试)",
+            "type": "shell",
+            "command": "docker exec -it plcopen-dev gdbserver :9000 /workspace/bin/plcopen_runtime --config /workspace/config/pid_temperature.yaml",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": false
+            }
+        },
+        {
+            "label": "容器: 运行单元测试",
+            "type": "shell",
+            "command": "docker exec plcopen-dev bash -c 'cd /workspace && python3 -m pytest tests/unit/ -v'",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "容器: 运行内存检查 (Valgrind)",
+            "type": "shell",
+            "command": "docker exec plcopen-dev valgrind --leak-check=full --show-leak-kinds=all /workspace/bin/plcopen_runtime --config /workspace/config/pid_temperature.yaml",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "本地: 构建项目",
+            "type": "shell",
+            "windows": {
+                "command": ".\\build.ps1 -All"
+            },
+            "linux": {
+                "command": "make runtime && python3 setup.py build_ext --inplace"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build"
+        },
+        {
+            "label": "本地: 运行示例",
+            "type": "shell",
+            "windows": {
+                "command": ".\\run.ps1"
+            },
+            "linux": {
+                "command": "./bin/plcopen_runtime --config config/pid_temperature.yaml"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

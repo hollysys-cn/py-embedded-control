@@ -1,0 +1,39 @@
+# PID 温度控制 - 带调试配置
+# 此配置启用了 debugpy 远程调试功能
+
+# 运行时配置
+cycle_period_ms: 100  # 控制周期：100ms
+python_script: "python/examples/pid_temperature.py"
+timeout_threshold_percent: 150  # 超时阈值：150% 周期时间
+
+# 日志配置
+logging:
+  level: DEBUG  # 日志级别：DEBUG（显示详细调试信息）
+  file: "logs/runtime_debug.log"
+  max_size_mb: 50
+  console: true
+
+# 调试配置
+debug:
+  enabled: true        # 启用调试
+  host: "0.0.0.0"      # 监听所有网络接口（允许远程连接）
+  port: 5678           # debugpy 默认端口
+  timeout: 10          # 连接超时：10秒
+
+# 功能块配置
+function_blocks:
+  # PID 控制器
+  - type: pid
+    name: temperature_pid
+    settings:
+      kp: 2.0          # 比例增益
+      ki: 0.5          # 积分增益
+      kd: 0.1          # 微分增益
+      setpoint: 75.0   # 目标温度：75°C
+      output_min: 0.0  # 输出下限：0%
+      output_max: 100.0  # 输出上限：100%
+
+# 性能配置
+performance:
+  cpu_affinity: -1     # CPU 亲和性：-1 表示不绑定特定核心
+  max_function_blocks: 32
