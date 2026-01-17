@@ -46,10 +46,16 @@ static void print_usage(const char* program_name) {
 int main(int argc, char* argv[]) {
     const char* config_file = "config/runtime.yaml";
 
+    // 添加调试输出，确保程序启动
+    fprintf(stdout, "PLCopen Runtime starting...\n");
+    fflush(stdout);
+
     // 解析命令行参数
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--config") == 0 && i + 1 < argc) {
             config_file = argv[++i];
+            fprintf(stdout, "Using config: %s\n", config_file);
+            fflush(stdout);
         } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             print_usage(argv[0]);
             return 0;
@@ -64,9 +70,13 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
+    fprintf(stdout, "Initializing runtime context...\n");
+    fflush(stdout);
+
     // 初始化运行时上下文
     if (runtime_context_init(config_file) != 0) {
         fprintf(stderr, "运行时初始化失败\n");
+        fflush(stderr);
         return 1;
     }
 

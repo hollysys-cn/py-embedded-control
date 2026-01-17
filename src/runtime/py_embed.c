@@ -22,9 +22,24 @@ int py_embed_init(void) {
 
     // 添加当前目录到模块搜索路径
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.insert(0, '.')");
-    PyRun_SimpleString("sys.path.insert(0, './python')");
-    PyRun_SimpleString("sys.path.insert(0, './src/python_bindings')");
+    PyRun_SimpleString("import os");
+    PyRun_SimpleString("import io");
+    // 设置 UTF-8 编码
+    PyRun_SimpleString("sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', line_buffering=True)");
+    PyRun_SimpleString("sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', line_buffering=True)");
+    PyRun_SimpleString("sys.path.insert(0, os.getcwd())");
+    PyRun_SimpleString("sys.path.insert(0, os.path.join(os.getcwd(), 'python'))");
+    PyRun_SimpleString("sys.path.insert(0, os.path.join(os.getcwd(), 'python', 'examples'))");
+    PyRun_SimpleString("sys.path.insert(0, os.path.join(os.getcwd(), 'src', 'python_bindings'))");
+
+    // 调试：打印 Python 路径
+    PyRun_SimpleString("print('Python sys.path:', file=sys.stderr)");
+    PyRun_SimpleString("for p in sys.path[:5]: print('  -', p, file=sys.stderr)");
+    PyRun_SimpleString("sys.stderr.flush()");
+
+    // 禁用 stdout 和 stderr 缓冲，确保输出实时显示
+    PyRun_SimpleString("import sys; sys.stdout.reconfigure(line_buffering=True)");
+    PyRun_SimpleString("import sys; sys.stderr.reconfigure(line_buffering=True)");
 
     return 0;
 }
@@ -42,6 +57,9 @@ int py_embed_load_script(const char* script_path, PyEmbedContext* context) {
                       (void*)script_path, (void*)context);
         return -1;
     }
+
+    fprintf(stdout, "DEBUG: py_embed_load_script: %s\n", script_path);
+    fflush(stdout);
 
     // 初始化上下文
     context->module = NULL;
@@ -61,7 +79,13 @@ int py_embed_load_script(const char* script_path, PyEmbedContext* context) {
         *dot = '\0';
     }
 
+    fprintf(stdout, "DEBUG: Module name: %s\n", module_name);
+    fflush(stdout);
+
     LOG_INFO_MSG("加载 Python 脚本：%s（模块名：%s）", script_path, module_name);
+
+    fprintf(stdout, "DEBUG: About to import module...\n");
+    fflush(stdout);
 
     // 导入模块
     PyObject* py_module_name = PyUnicode_DecodeFSDefault(module_name);
@@ -69,11 +93,19 @@ int py_embed_load_script(const char* script_path, PyEmbedContext* context) {
     Py_DECREF(py_module_name);
     free(script_path_copy);
 
+    fprintf(stdout, "DEBUG: Module import completed, checking result...\n");
+    fflush(stdout);
+
     if (!context->module) {
+        fprintf(stderr, "ERROR: Failed to import Python module: %s\n", module_name);
+        fflush(stderr);
         LOG_ERROR_MSG("无法导入 Python 模块：%s", module_name);
         py_embed_handle_exception();
         return -1;
     }
+
+    fprintf(stdout, "DEBUG: Module imported successfully\n");
+    fflush(stdout);
 
     // 获取 init() 函数
     context->init_func = PyObject_GetAttrString(context->module, "init");
@@ -118,6 +150,10 @@ int py_embed_call_init(PyEmbedContext* context) {
     }
 
     Py_DECREF(result);
+
+    // 强制刷新 Python stdout，确保初始化输出立即显示
+    PyRun_SimpleString("import sys; sys.stdout.flush()");
+
     LOG_INFO_MSG("init() 函数执行成功");
 
     return 0;
@@ -138,6 +174,10 @@ int py_embed_call_step(PyEmbedContext* context) {
     }
 
     Py_DECREF(result);
+
+    // 强制刷新 Python stdout，确保输出立即显示
+    PyRun_SimpleString("import sys; sys.stdout.flush()");
+
     return 0;
 }
 
@@ -145,6 +185,9 @@ void py_embed_handle_exception(void) {
     if (!PyErr_Occurred()) {
         return;
     }
+
+    fprintf(stderr, "Python exception occurred!\n");
+    fflush(stderr);
 
     // 获取异常信息
     PyObject *ptype, *pvalue, *ptraceback;
@@ -157,6 +200,8 @@ void py_embed_handle_exception(void) {
         if (str_obj) {
             const char* error_msg = PyUnicode_AsUTF8(str_obj);
             if (error_msg) {
+                fprintf(stderr, "Python exception: %s\n", error_msg);
+                fflush(stderr);
                 LOG_ERROR_MSG("Python 异常：%s", error_msg);
             }
             Py_DECREF(str_obj);

@@ -22,6 +22,7 @@
         {
             "text": "保持信息简洁明了."
         }
-    ]
+    ],
+    "chat.agent.maxRequests": 100
 }
 

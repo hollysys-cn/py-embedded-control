@@ -35,8 +35,11 @@
 |------|------|
 | `start-debug.ps1` | Windows 一键启动调试脚本（常用）⭐ |
 | `start-debug.sh` | Linux/macOS 一键启动调试脚本（常用）⭐ |
+| `start-debug.bat` | Windows 批处理包装器（绕过执行策略）⭐ |
 | `build.ps1` | Windows 构建脚本 |
+| `build.bat` | Windows 批处理包装器（绕过执行策略）|
 | `run.ps1` | Windows 运行脚本 |
+| `run.bat` | Windows 批处理包装器（绕过执行策略）|
 | `scripts/` | 辅助脚本目录（版权检查、验证、容器调试等）|
 
 ### 配置目录

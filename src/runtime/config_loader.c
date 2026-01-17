@@ -86,13 +86,21 @@ int config_load_from_file(const char* file_path, RuntimeConfig* config) {
         // 解析键值对
         if (parse_key_value(trimmed, key, value) == 0) {
             // 根据节和键设置配置
-            if (strcmp(section, "runtime") == 0) {
-                if (strcmp(key, "cycle_period_ms") == 0) {
+            // 支持 runtime 和 scheduler 两种节名（向后兼容）
+            if (strcmp(section, "runtime") == 0 || strcmp(section, "scheduler") == 0) {
+                if (strcmp(key, "cycle_period_ms") == 0 || strcmp(key, "cycle_time_ms") == 0) {
                     config->cycle_period_ms = atoi(value);
-                } else if (strcmp(key, "script_path") == 0) {
+                } else if (strcmp(key, "script_path") == 0 || strcmp(key, "path") == 0) {
                     strncpy(config->script_path, value, sizeof(config->script_path) - 1);
+                    config->script_path[sizeof(config->script_path) - 1] = '\0';
                 } else if (strcmp(key, "timeout_threshold_percent") == 0) {
                     config->timeout_threshold_percent = atoi(value);
+                }
+            } else if (strcmp(section, "script") == 0) {
+                // 支持独立的 script 节
+                if (strcmp(key, "path") == 0) {
+                    strncpy(config->script_path, value, sizeof(config->script_path) - 1);
+                    config->script_path[sizeof(config->script_path) - 1] = '\0';
                 }
             } else if (strcmp(section, "logging") == 0) {
                 if (strcmp(key, "level") == 0) {
@@ -109,6 +117,7 @@ int config_load_from_file(const char* file_path, RuntimeConfig* config) {
                     config->debug_enabled = (strcmp(value, "true") == 0);
                 } else if (strcmp(key, "host") == 0) {
                     strncpy(config->debug_host, value, sizeof(config->debug_host) - 1);
+                    config->debug_host[sizeof(config->debug_host) - 1] = '\0';
                 } else if (strcmp(key, "port") == 0) {
                     config->debug_port = atoi(value);
                 } else if (strcmp(key, "timeout") == 0) {

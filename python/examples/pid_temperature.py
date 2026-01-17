@@ -29,11 +29,11 @@ def init():
     global pid
 
     # 创建 PID 控制器
-    # Kp=3.0: 比例系数（较强的比例作用）
-    # Ki=0.2: 积分系数（消除稳态误差）
-    # Kd=0.5: 微分系数（抑制超调）
+    # Kp=2.5: 比例系数（适度的比例作用）
+    # Ki=3.0: 积分系数（强积分作用，消除最后的稳态误差）
+    # Kd=0.3: 微分系数（适度抑制超调）
     # output_min=0, output_max=100: 控制输出 0-100%
-    pid = PID(Kp=3.0, Ki=0.2, Kd=0.5, output_min=0, output_max=100)
+    pid = PID(Kp=2.5, Ki=3.0, Kd=0.3, output_min=0, output_max=100)
 
     print("PID 温度控制初始化完成")
     print(f"  目标温度: {setpoint}°C")
@@ -50,6 +50,9 @@ def step():
     """周期执行函数，每个控制周期调用"""
     global temperature, step_count
 
+    if pid is None:
+        raise RuntimeError("PID 控制器未初始化，请先调用 init()")
+
     step_count += 1
 
     # 添加测量噪声（模拟真实传感器）
@@ -60,11 +63,11 @@ def step():
 
     # 物理模型仿真
     # 1. 加热效果：控制输出越大，温度上升越快
-    heating = control_output * 0.01  # 加热贡献
+    heating = control_output * 0.1  # 加热贡献
 
     # 2. 自然散热：温度越高，散热越快（牛顿冷却定律）
     ambient_temp = 20.0
-    cooling = (temperature - ambient_temp) * 0.05  # 散热贡献
+    cooling = (temperature - ambient_temp) * 0.0065  # 散热贡献（精确调节以达到25°C）
 
     # 3. 更新温度（离散时间步进）
     temperature += heating - cooling
@@ -92,10 +95,10 @@ if __name__ == "__main__":
 
     init()
 
-    # 模拟 100 个周期
-    for _ in range(100):
+    # 模拟 200 个周期（20秒），观察温度是否能稳定到目标值
+    for _ in range(200):
         step()
 
     print("=" * 60)
-    print(f"测试完成：最终温度 = {temperature:.2f}°C")
+    print(f"测试完成：最终温度 = {temperature:.2f}°C，误差 = {setpoint - temperature:.2f}°C")
     print("=" * 60)

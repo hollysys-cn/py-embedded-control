@@ -23,19 +23,29 @@ int runtime_context_init(const char* config_file) {
         return 0;
     }
 
+    fprintf(stdout, "DEBUG: Loading config from %s\n", config_file);
+    fflush(stdout);
+
     // 加载配置
     if (config_load_from_file(config_file, &g_runtime_context.config) != 0) {
-        LOG_ERROR_MSG("配置加载失败：%s", config_file);
+        fprintf(stderr, "配置加载失败：%s\n", config_file);
+        fflush(stderr);
         return -1;
     }
+
+    fprintf(stdout, "DEBUG: Config loaded, initializing logger\n");
+    fflush(stdout);
 
     // 初始化日志系统
     if (logger_init(&g_runtime_context.config.log_config) != 0) {
         fprintf(stderr, "日志系统初始化失败\n");
+        fflush(stderr);
         return -1;
     }
 
     LOG_INFO_MSG("运行时上下文初始化：配置文件=%s", config_file);
+    fprintf(stdout, "DEBUG: Logger initialized, initializing Python\n");
+    fflush(stdout);
 
     // 初始化 Python 解释器
     if (py_embed_init() != 0) {
@@ -43,6 +53,9 @@ int runtime_context_init(const char* config_file) {
         logger_cleanup();
         return -1;
     }
+
+    fprintf(stdout, "DEBUG: Python initialized, loading script: %s\n", g_runtime_context.config.script_path);
+    fflush(stdout);
 
     // 加载用户脚本
     if (py_embed_load_script(g_runtime_context.config.script_path,
@@ -52,6 +65,9 @@ int runtime_context_init(const char* config_file) {
         logger_cleanup();
         return -1;
     }
+
+    fprintf(stdout, "DEBUG: Script loaded successfully\n");
+    fflush(stdout);
 
     g_runtime_context.running = 0;
     g_runtime_context.cycle_count = 0;

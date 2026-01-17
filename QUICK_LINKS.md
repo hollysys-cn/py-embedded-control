@@ -28,11 +28,18 @@
 # 一键启动调试（最简单！）
 .\start-debug.ps1
 
+# 如果遇到 PowerShell 执行策略限制，使用 .bat 包装器：
+start-debug.bat      # 自动绕过执行策略 ✅
+
 # 构建项目
 .\build.ps1 -All
+# 或
+build.bat -All       # 绕过执行策略
 
 # 运行示例
 .\run.ps1
+# 或
+run.bat              # 绕过执行策略
 ```
 
 ### Linux/macOS

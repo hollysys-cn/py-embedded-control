@@ -37,7 +37,16 @@ if (-not (Test-Docker)) {
 
 if ($Shell) {
     Write-Info "Starting Docker development shell..."
-    docker-compose run --rm dev bash
+
+    # 确保容器正在运行
+    $containerStatus = docker ps -q -f name=plcopen-dev
+    if (-not $containerStatus) {
+        Write-Info "Starting development container..."
+        docker-compose up -d dev
+        Start-Sleep -Seconds 2
+    }
+
+    docker exec -it plcopen-dev bash
     exit 0
 }
 
@@ -48,7 +57,18 @@ if ($Debug) {
     Write-Info "VS Code: Press F5 and select 'Python: Attach to Runtime'"
 }
 
+# 确保开发容器正在运行
+$containerStatus = docker ps -q -f name=plcopen-dev
+if (-not $containerStatus) {
+    Write-Info "Starting development container..."
+    docker-compose up -d dev
+    Start-Sleep -Seconds 2
+}
+
 Write-Info "Starting runtime: $Config"
 Write-Info "Press Ctrl+C to stop"
+Write-Info "Note: Python output will be shown in real-time"
 
-docker-compose run --rm --service-ports dev bash -c "cd /workspace && ./bin/plcopen_runtime --config $Config"
+# 使用 docker exec 在运行中的容器内执行命令
+# 这样 Ctrl+C 可以正常工作
+docker exec -it plcopen-dev bash -c "cd /workspace && ./bin/plcopen_runtime --config $Config"

@@ -29,11 +29,19 @@ cd py-embedded-control
 [INFO] 构建 Docker 镜像...
 [INFO] Docker 镜像构建成功
 [INFO] 构建运行时程序...
+Building runtime executable...
+gcc -std=c11 ... (编译命令)
 [INFO] 运行时构建成功
 [INFO] 构建 Python 扩展...
 [INFO] Python 扩展构建成功
 [INFO] 所有操作完成
 ```
+
+**构建时间**：首次构建约 2-5 分钟（需要下载 Docker 镜像）
+
+**如果遇到编译警告**：
+- `warning: 'strncpy' output may be truncated` - 已在最新版本修复，请更新代码
+- 其他警告通常可以忽略
 
 **如果遇到错误**：
 - 确保 Docker Desktop 正在运行
@@ -48,27 +56,41 @@ cd py-embedded-control
 .\run.ps1
 ```
 
-**预期输出**：
+**第一次运行时的输出**：
 ```
-[INFO] 启动运行时: config/pid_temperature.yaml
-[INFO] 按 Ctrl+C 停止运行
-[INFO] 配置加载成功
-[INFO] Python 脚本加载成功
-[INFO] init() 函数执行成功
-[INFO] 运行时启动：周期=100 ms
+[INFO] Starting development container...
+[+] Running 1/1
+ ✔ Container plcopen-dev  Started
+[INFO] Starting runtime: config/pid_temperature.yaml
+[INFO] Press Ctrl+C to stop
+[INFO] Note: Python output will be shown in real-time
 
-周期 1: 当前温度=25.0°C, 目标=75.0°C, 输出=100.0%
-周期 2: 当前温度=28.5°C, 目标=75.0°C, 输出=95.2%
-周期 3: 当前温度=32.1°C, 目标=75.0°C, 输出=88.7%
+PID 温度控制初始化完成
+  目标温度: 25.0°C
+  初始温度: 20.0°C
+  PID 参数: Kp=3.0, Ki=0.2, Kd=0.5
+------------------------------------------------------------
+周期   10 | 温度: 20.45°C | 误差:  4.554°C | 控制输出:  13.7%
+周期   20 | 温度: 20.89°C | 误差:  4.112°C | 控制输出:  12.3%
+周期   30 | 温度: 21.31°C | 误差:  3.689°C | 控制输出:  11.1%
 ...
 ```
 
 **观察**：
-- 温度值逐渐上升，接近目标温度 75°C
+- 首次运行会启动后台开发容器（plcopen-dev）
+- Python 脚本的 `print()` 输出实时显示
+- 温度值逐渐上升，接近目标温度 25°C
 - PID 控制器自动调整输出功率
-- 周期时间稳定在 100ms 左右
+- 每 10 个周期（1秒）输出一次状态
 
-**停止程序**：按 `Ctrl+C`
+**停止程序**：按 `Ctrl+C`（现在可以正常终止了！）
+
+**重要说明**：
+- 开发容器会在后台保持运行，下次运行 `.\run.ps1` 时会更快
+- 如需停止容器：`docker-compose down`
+- 查看容器状态：`docker ps`
+- 日志文件位于容器内的 `logs/pid_temperature.log`
+- **如果看不到 Python 输出**：请确保已重新构建项目（应用了输出刷新修复）：`.\build.ps1 -Runtime`
 
 ### 3.2 运行级联控制示例
 
@@ -255,7 +277,40 @@ Error: port 5678 is already in use
 1. 停止占用端口的程序
 2. 或修改配置文件中的端口号（`debug.port`）
 
-### 问题 4：调试器连接失败
+### 问题 4：Ctrl+C 无法停止程序
+
+**症状**：程序卡住，Ctrl+C 无响应
+
+**解决方法**：
+1. 打开新的 PowerShell 窗口
+2. 执行：
+   ```powershell
+   docker-compose down
+   ```
+3. 重新运行 `.\run.ps1`
+
+**注意**：最新版本已修复此问题，使用 `docker exec` 代替 `docker-compose run`
+
+### 问题 5：看不到程序输出
+
+**症状**：运行后只看到容器启动信息，没有 Python 输出
+
+**解决方法**：
+1. 确保已重新构建项目（需要应用 Python 缓冲修复）：
+   ```powershell
+   .\build.ps1 -Runtime
+   ```
+2. 检查容器日志：
+   ```powershell
+   docker logs plcopen-dev
+   ```
+3. 进入容器手动运行：
+   ```powershell
+   .\run.ps1 -Shell
+   ./bin/plcopen_runtime --config config/pid_temperature.yaml
+   ```
+
+### 问题 6：调试器连接失败
 
 **症状**：VS Code 显示"无法连接到调试器"
 
@@ -270,13 +325,64 @@ Error: port 5678 is already in use
 **错误信息**：
 ```
 .\build.ps1 : 无法加载文件 .\build.ps1，因为在此系统上禁止运行脚本
+所在位置 行:1 字符: 1
++ .\build.ps1 -All
++ ~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
 ```
 
-**解决方法**：
+**解决方法（选择其一）**：
+
+#### 方法 1：使用 .bat 包装器（推荐，最简单）✅
+
+项目提供了 `.bat` 文件自动绕过执行策略限制：
+
+```cmd
+# 使用 .bat 替代 .ps1
+build.bat -All        # 替代 .\build.ps1 -All
+run.bat               # 替代 .\run.ps1
+start-debug.bat       # 替代 .\start-debug.ps1
+```
+
+**优点**：无需修改系统设置，开箱即用
+
+#### 方法 2：临时绕过（单次执行）
+
+```powershell
+# 方式 A：直接绕过
+PowerShell -ExecutionPolicy Bypass -File .\build.ps1 -All
+
+# 方式 B：仅对当前会话设置
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+.\build.ps1 -All
+```
+
+**优点**：不影响系统设置，执行后自动恢复
+
+#### 方法 3：永久设置（当前用户）
+
 ```powershell
 # 以管理员身份运行 PowerShell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 然后正常运行
+.\build.ps1 -All
 ```
+
+**优点**：一次设置，永久生效
+**说明**：`RemoteSigned` 策略允许运行本地脚本，从互联网下载的脚本需要数字签名
+
+#### 执行策略说明
+
+| 策略 | 说明 | 适用场景 |
+|------|------|----------|
+| `Restricted` | 默认策略，禁止所有脚本 | Windows 默认设置 |
+| `RemoteSigned` | 本地脚本可运行，远程脚本需签名 | 开发环境（推荐）|
+| `Bypass` | 无任何限制 | 临时执行 |
+| `Unrestricted` | 所有脚本可运行，远程脚本会警告 | 不推荐 |
+
+**推荐**：开发时使用**方法 1**（.bat 包装器）或**方法 3**（RemoteSigned）
 
 ---
 
