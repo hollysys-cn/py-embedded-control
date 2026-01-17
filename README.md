@@ -36,7 +36,11 @@
 
 ## 快速开始
 
-> 💡 **想要调试？** 查看 [容器远程调试指南](DEBUGGING.md) 了解如何在 Docker 容器中使用 VS Code 进行远程调试。
+> 💡 **想要远程调试？** 使用一键启动脚本：
+> - Windows: `.\start-debug.ps1`
+> - Linux/Mac: `./start-debug.sh`
+>
+> 详细指南见 [远程调试快速入门](REMOTE_DEBUG_QUICKSTART.md)
 
 ### 方式 1：Docker（推荐，支持 Windows/Mac/Linux）
 

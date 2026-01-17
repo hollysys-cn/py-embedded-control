@@ -3,7 +3,7 @@
 
 # 运行时配置
 cycle_period_ms: 100  # 控制周期：100ms
-python_script: "python/examples/pid_temperature_control.py"
+python_script: "python/examples/pid_temperature.py"
 timeout_threshold_percent: 150  # 超时阈值：150% 周期时间
 
 # 日志配置
