@@ -136,7 +136,7 @@
 
 - [X] T048 实现用户脚本 init() 函数调用 src/runtime/py_embed.c（运行时启动时调用一次）
 - [X] T049 实现用户脚本 step() 函数周期调用 src/runtime/py_embed.c（每个控制周期调用）
-- [ ] T050 实现脚本超时检测 src/runtime/scheduler.c（step() 执行时间超过周期时间记录警告）
+- [X] T050 实现脚本超时检测 src/runtime/scheduler.c（step() 执行时间超过周期时间记录警告）
 
 **检查点**: 用户故事 2 完成，可以运行完整的 PID 温度控制示例 ✅
 
@@ -188,23 +188,23 @@
 
 ### 文档完善
 
-- [ ] T066 [P] 创建用户手册 docs/user_guide.md（安装、配置、运行、调试，中文）
-- [ ] T067 [P] 创建 API 参考文档 docs/api_reference.md（所有功能块方法、参数、返回值，中文）
-- [ ] T068 [P] 创建常见问题解答 docs/faq.md（安装失败、周期不稳定、调试连接、PID 振荡）
-- [ ] T069 [P] 创建贡献指南 docs/CONTRIBUTING.md（代码规范、提交流程、测试要求）
+- [X] T066 [P] 创建用户手册 docs/user_guide.md（安装、配置、运行、调试，中文）
+- [X] T067 [P] 创建 API 参考文档 docs/api_reference.md（所有功能块方法、参数、返回值，中文）
+- [X] T068 [P] 创建常见问题解答 docs/faq.md（安装失败、周期不稳定、调试连接、PID 振荡）
+- [X] T069 [P] 创建贡献指南 docs/CONTRIBUTING.md（代码规范、提交流程、测试要求）
 
 ### 代码质量
 
-- [ ] T070 [P] 运行 cppcheck 静态分析 Makefile（添加 make lint 目标，检查 C 代码）
+- [X] T070 [P] 运行 cppcheck 静态分析 Makefile（添加 make lint 目标，检查 C 代码）
 - [ ] T071 [P] 运行 pylint/flake8 分析 Makefile（检查 Python 代码，PEP 8 规范）
 - [ ] T072 [P] 确保所有 C/Python 注释使用简体中文（符合 constitution.md 原则一）
 - [ ] T073 [P] 验证所有文件使用 UTF-8 无 BOM，LF 行尾（通过 .gitattributes 强制）
 
 ### 许可证和合规
 
-- [ ] T074 [P] 创建 LICENSE 文件（选择 MIT 或 Apache 2.0）
-- [ ] T075 [P] 添加依赖许可证说明 docs/licenses.md（debugpy MIT, CPython PSF License）
-- [ ] T076 [P] 添加版权声明到所有源文件头部（C 和 Python 文件）
+- [X] T074 [P] 创建 LICENSE 文件（选择 MIT 或 Apache 2.0）
+- [X] T075 [P] 添加依赖许可证说明 docs/licenses.md（debugpy MIT, CPython PSF License）
+- [X] T076 [P] 添加版权声明到所有源文件头部（C 和 Python 文件）
 
 ---
 

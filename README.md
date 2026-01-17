@@ -232,8 +232,16 @@ make clean
 
 ## 文档
 
+完整文档请参考：
+
+- **[用户手册](docs/user_guide.md)** - 安装、配置、使用指南
+- **[API 参考](docs/api_reference.md)** - 完整 API 文档
+- **[常见问题](docs/faq.md)** - 常见问题和解决方案
+- **[贡献指南](docs/contributing.md)** - 如何参与开发
+- **[代码质量](docs/code_quality.md)** - 静态分析和质量检查
+- **[许可证](LICENSE)** - MIT License
+- **[依赖许可证](docs/licenses.md)** - 第三方依赖许可信息
 - [快速入门指南](specs/001-plcopen-python-runtime/quickstart.md)
-- [API 参考](specs/001-plcopen-python-runtime/contracts/function_blocks_api.md)
 - [数据模型](specs/001-plcopen-python-runtime/data-model.md)
 - [实施计划](specs/001-plcopen-python-runtime/plan.md)
 
@@ -241,9 +249,11 @@ make clean
 
 本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
 
+第三方依赖许可证信息请参见 [docs/licenses.md](docs/licenses.md)。
+
 ## 贡献
 
-欢迎贡献！请参阅 [贡献指南](docs/CONTRIBUTING.md)（即将发布）。
+欢迎贡献！请参阅 [贡献指南](docs/contributing.md)。
 
 ## 联系方式
 

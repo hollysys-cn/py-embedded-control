@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2026 Hollysys Co., Ltd.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 /**
  * @file logger.c
  * @brief 日志系统实现
