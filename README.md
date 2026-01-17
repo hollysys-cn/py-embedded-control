@@ -41,16 +41,61 @@
 
 ## 🚀 快速开始
 
+> **⚠️ 重要**: 本项目已迁移到 **Bash 脚本**实现跨平台支持。
+>
+> - **Windows 用户**: 需要 [Git Bash](https://gitforwindows.org/) 或 WSL (`wsl --install`)
+> - **迁移指南**: [MIGRATION_FROM_POWERSHELL.md](MIGRATION_FROM_POWERSHELL.md)
+
+### 3 步快速开始
+
+```bash
+# 1. 构建项目
+./build.sh
+
+# 2. 运行测试
+./test.sh
+
+# 3. 运行 PID 示例
+./run.sh
+```
+
+### 常用命令
+
+```bash
+./build.sh --clean      # 清理后构建
+./run.sh --shell        # 进入容器 Shell
+./test.sh --lint        # 仅静态分析
+```
+
 ### 选择你的起点
 
 | 场景 | 推荐方式 | 快速链接 |
 |------|---------|---------|
-| 🪟 **Windows 用户** | Docker + PowerShell | [Windows 快速开始](docs/guides/WINDOWS_QUICKSTART.md) |
-| 🐧 **Linux 用户** | Docker 或原生安装 | [本地安装指南](docs/guides/LOCAL_SETUP.md) |
-| 🍎 **macOS 用户** | Docker | [Docker 方式](#方式-1docker推荐支持-windowsmaclinux) |
-| 🐛 **调试开发** | 一键启动脚本 | [远程调试指南](docs/guides/REMOTE_DEBUG_QUICKSTART.md) |
+| 🪟 **Windows 用户** | Git Bash + Docker | [Windows 快速开始](docs/guides/WINDOWS_QUICKSTART.md) |
+| 🐧 **Linux 用户** | Bash + Docker | [本地安装指南](docs/guides/LOCAL_SETUP.md) |
+| 🍎 **macOS 用户** | Bash + Docker | [3 步快速开始](#3-步快速开始) |
+| 🐛 **调试开发** | 容器 + debugpy | [远程调试指南](docs/guides/REMOTE_DEBUG_QUICKSTART.md) |
 
-### 一键远程调试
+### 调试支持
+
+```bash
+# 进入容器 Shell
+./run.sh --shell
+
+# 手动启动 Python 调试
+docker exec -it plcopen-dev python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client /workspace/python/examples/pid_temperature.py
+```
+
+然后在 VS Code 中按 **F5** 开始调试。
+
+---
+
+### ~~旧版 PowerShell 脚本 (已弃用)~~
+
+<details>
+<summary>点击展开旧命令</summary>
+
+#### 一键远程调试
 
 ```powershell
 # Windows
@@ -60,9 +105,22 @@
 ./start-debug.sh
 ```
 
-然后在 VS Code 中按 **F5** 开始调试！
+</details>
 
-### 方式 1：Docker（推荐，支持 Windows/Mac/Linux）
+---
+
+### 方式 1：Docker（推荐）
+
+使用新的 Bash 脚本:
+
+```bash
+./build.sh              # 构建
+./run.sh                # 运行
+./test.sh               # 测试
+```
+
+<details>
+<summary>旧版 Windows PowerShell 命令</summary>
 
 #### Windows 环境
 
