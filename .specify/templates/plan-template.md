@@ -17,21 +17,33 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Project Type**: [single/web/mobile - determines source structure]
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+基于 `.specify/memory/constitution.md` 的核心原则进行检查：
+
+- [ ] **简体中文优先**：所有文档、注释、界面文本是否使用简体中文？
+- [ ] **SOLID 原则**：架构设计是否遵循单一职责、开闭原则等？模块职责是否清晰？
+- [ ] **架构兼容性**：是否充分使用现有代码架构？是否避免了不必要的目录结构修改？
+- [ ] **环境隔离**：环境配置是否限制在工作空间内？是否使用了 .env 文件？
+- [ ] **编程语言标准**：C 代码是否使用 C11 标准（`-std=c11`）？Python 是否遵循 PEP 规范？
+- [ ] **依赖管理**：新依赖是否使用国内镜像？是否需要人工确认？版本是否明确声明？
+- [ ] **许可合规**：所有第三方依赖是否为 MIT/Apache 或经过审核的其他开源许可？
+- [ ] **代码质量**：是否具备完善的注释？圈复杂度是否合理（≤10）？是否可测试？静态分析工具（pylint/flake8/cppcheck）配置正确？
+- [ ] **修改范围**：修改是否最小化？是否仅涉及相关模块？
+- [ ] **文件编码**：是否使用 UTF-8 编码和 Linux 行尾符（LF）？
+- [ ] **质量门禁**：是否满足当前阶段的质量检查要求（静态分析、测试覆盖率等）？
 
 ## Project Structure
 

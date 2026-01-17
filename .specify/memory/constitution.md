@@ -1,50 +1,212 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+==================
+Version Change: 1.0.0 → 1.1.0
+Modified Principles:
+  - 原则五「现代工程实践」→「编程语言与标准」（新增 C11 标准规范）
+  - 原则六至十二编号顺延（内容未变）
+Added Content:
+  - C 语言 C11 标准强制要求（编译器标志、标准特性、并发支持）
+  - Python PEP 规范声明
+  - 静态分析工具新增 cppcheck（C 语言）
+  - 现代工程实践新增 MISRA C 规范参考
+Templates Status:
+  ✅ plan-template.md - 已更新 Constitution Check 清单（新增 C11 检查项和 cppcheck 工具）
+  ✅ spec-template.md - 无需更新（与语言标准无关）
+  ✅ tasks-template.md - 无需更新（与语言标准无关）
+  ⚠ agent-file-template.md - Not reviewed (out of scope for core workflow)
+  ⚠ checklist-template.md - Not reviewed (out of scope for core workflow)
+Follow-up TODOs: None
+-->
 
-## Core Principles
+# Python 嵌入式控制系统宪章
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## 核心原则
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### 一、简体中文优先
+本项目的开发过程和软件用户主要面向中国大陆用户，必须遵循以下规则：
+- 所有文档（需求规格、设计文档、用户手册）必须使用简体中文编写
+- 代码推理过程和设计讨论必须使用简体中文
+- 代码注释必须使用简体中文（除非引用国际标准或第三方库的英文术语）
+- 软件界面（UI文本、提示信息、错误消息）必须使用简体中文
+- 变量名、函数名、类名等标识符可使用英文，但应遵循通用命名规范
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**原则依据**：确保团队协作效率和用户体验的一致性，降低沟通成本。
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### 二、SOLID 原则与模块化设计
+系统架构必须遵循 SOLID 原则（单一职责、开闭原则、里氏替换、接口隔离、依赖倒置）：
+- 每个模块必须具有清晰的单一职责
+- 提供清晰的模块接口设计文档
+- 模块间通过接口交互，降低耦合度
+- 采用常用且经过验证的设计模式（如工厂模式、观察者模式、策略模式）
+- 避免过度设计：不引入未来可能需要但当前不需要的复杂性（遵循 YAGNI 原则）
+- 保持代码简洁实用，优先考虑可读性和可维护性
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+**原则依据**：确保代码的长期可维护性、可扩展性和团队协作效率。
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### 三、架构约束与兼容性
+在现有项目基础上进行开发时，必须遵循以下约束：
+- 充分理解并使用现有代码架构和设计模式
+- 避免修改现有文件目录结构，除非有充分的技术理由并经过评审
+- 新增功能应与现有架构保持一致性
+- 修改现有模块时，必须保持向后兼容性（除非是重大版本升级且有明确的迁移计划）
+- 新建项目不受此约束，但必须在初期确立清晰的目录结构规范
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**原则依据**：保护既有投资，降低回归风险，确保系统稳定性。
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### 四、环境隔离与工作空间管理
+开发环境及相关工具的安装和配置必须遵循以下原则：
+- 环境配置应自动化（如使用脚本、Docker、虚拟环境）
+- 不得污染本地计算机的全局环境（系统级依赖、全局环境变量）
+- 影响范围必须限制在当前工作空间内
+- 环境变量配置使用项目根目录的 `.env` 文件或工作空间配置文件
+- 依赖管理使用项目级虚拟环境（如 Python 的 venv、poetry）
+- 必须提供环境重建脚本，确保新成员能快速搭建开发环境
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**原则依据**：提高开发环境的一致性和可重复性，降低环境冲突风险。
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+### 五、编程语言与标准
+项目开发必须遵循明确的编程语言标准和规范：
+- **C 语言**：必须使用 C11 标准（ISO/IEC 9899:2011）
+  - 编译器必须启用 C11 标准（如 GCC 使用 `-std=c11`，Clang 使用 `-std=c11`）
+  - 禁止使用编译器特定的扩展，除非有充分理由并明确标注（如 `__attribute__`）
+  - 必须遵循 C11 的内存模型和并发支持（`stdatomic.h`、`threads.h`）
+  - 优先使用 C11 的标准特性（如 `_Static_assert`、匿名结构体/联合体、`_Alignas`）
+- **Python**：遵循 PEP 规范，类型注解遵循 PEP 484
+- **其他语言**：根据项目需要，明确标准版本并记录在技术文档中
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**原则依据**：确保代码的可移植性、标准化和长期维护性，避免编译器依赖问题。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### 六、现代工程实践
+项目开发必须遵循现代软件工程的标准流程和方法：
+- 使用版本控制系统（Git）进行代码管理
+- 采用分支策略（如 Git Flow 或 GitHub Flow）
+- 使用持续集成/持续部署（CI/CD）自动化测试和部署
+- 遵循代码审查（Code Review）流程
+- 采用敏捷开发方法论（迭代开发、快速反馈）
+- 参考开源社区的最佳实践（如 Python PEP 规范、Linux 编码风格、MISRA C 规范）
+
+**原则依据**：提高团队协作效率，保证代码质量，加速交付速度。
+
+### 七、依赖管理与镜像源
+第三方依赖包和工具的管理必须遵循以下规则：
+- 优先从国内镜像源获取依赖包（如阿里云镜像站 https://developer.aliyun.com/mirror/、清华大学镜像站）
+- 在配置文件中明确声明依赖包的版本号，避免隐式升级导致的兼容性问题
+- 引入新的第三方依赖前，必须评估其必要性、稳定性和许可证兼容性
+- 当需要引入新依赖时，应尽早提醒人工确认（通过评审或通知机制）
+- 定期更新依赖包以修复安全漏洞，但需经过测试验证
+
+**原则依据**：提升国内下载速度，避免依赖冲突，确保供应链安全。
+
+### 八、许可合规（非协商）
+第三方依赖包的许可证管理具有强制性：
+- 所有第三方依赖包必须是开源的
+- 依赖包的许可证必须对商业应用友好
+- 优先选用 MIT 或 Apache 2.0 许可证的依赖包
+- 若使用其他许可证（如 GPL、LGPL、EPL 等），必须经过人工审核批准并记录在案
+- 禁止使用具有严格传染性的许可证（如 AGPL），除非明确隔离
+- 项目必须维护依赖包许可证清单（如 LICENSE-3RD-PARTY.txt）
+
+**原则依据**：规避法律风险，保护项目的商业化能力。
+
+### 九、代码质量与可维护性
+代码质量必须满足以下标准：
+- 代码必须具备完善的注释，解释复杂逻辑和设计意图（简体中文）
+- 所有公共接口必须提供 API 文档（docstring 或独立文档）
+- 圈复杂度（Cyclomatic Complexity）必须控制在合理范围内（单个函数不超过 10，建议不超过 5）
+- 代码必须尽可能复用，避免重复（DRY 原则）
+- 设计必须具备良好的可测试性（依赖注入、接口抽象）
+- 关注用户体验（响应时间、错误提示、操作流程）和系统性能（CPU、内存、I/O 优化）
+- 使用静态代码分析工具（如 pylint、flake8、cppcheck）并通过质量检查
+
+**原则依据**：确保代码的长期可维护性，降低技术债务积累。
+
+### 十、最小化修改范围
+在修复缺陷和添加新功能时，必须遵循以下原则：
+- 明确问题的根本原因，避免过度修改
+- 修改范围必须最小化，仅涉及相关模块
+- 避免在同一次提交中混合多个无关的修改
+- 若需要重构，应单独进行并经过充分测试
+- 使用版本控制系统的差异对比（diff）工具审查修改范围
+- 修改后必须运行相关测试用例，确保未引入回归问题
+
+**原则依据**：降低变更风险，提高代码审查效率，便于问题追溯。
+
+### 十一、文件编码与行尾规范
+所有文本文件必须遵循统一的编码规范：
+- 文件编码必须使用 UTF-8（无 BOM）
+- 行尾符必须使用 Unix 风格（LF，`\n`），禁止使用 Windows 风格（CRLF，`\r\n`）
+- 配置编辑器（如 VS Code）自动转换行尾符
+- 在 `.gitattributes` 文件中明确规范行尾符处理规则
+- 提交代码前检查文件编码和行尾符，避免不必要的差异
+
+**原则依据**：避免跨平台协作中的编码问题和版本控制差异噪音。
+
+### 十二、配置优先级原则
+当本宪章的规定与现有项目配置存在冲突时，遵循以下原则：
+- 现有项目的配置文件优先（如 `.editorconfig`、`pyproject.toml`、`.gitattributes`）
+- 若现有配置不合理，应提出改进建议并经过团队评审
+- 新项目或新模块严格遵循本宪章的规定
+- 修改现有配置需要有充分的理由并记录在案
+
+**原则依据**：保护既有项目的稳定性，同时允许逐步改进。
+
+## 质量门禁
+
+在每个开发阶段的关键节点，必须通过以下质量检查：
+
+### 需求阶段
+- 需求规格文档必须使用简体中文编写
+- 需求必须明确、可测试、可验证
+- 新依赖的引入必须经过评审和确认
+
+### 设计阶段
+- 架构设计必须遵循 SOLID 原则
+- 模块接口必须清晰定义并文档化
+- 复杂度必须有合理性说明（参考圈复杂度指标）
+
+### 实现阶段
+- 代码必须通过静态分析工具检查
+- 注释和文档必须完善（简体中文）
+- 文件编码必须为 UTF-8，行尾符必须为 LF
+
+### 测试阶段
+- 单元测试覆盖率必须达到合理水平（建议 ≥ 80%）
+- 集成测试必须覆盖关键路径
+- 性能测试必须满足既定目标
+
+### 发布阶段
+- 第三方依赖的许可证必须经过合规检查
+- 环境配置必须可自动化重建
+- 发布文档必须包括变更日志（简体中文）
+
+## 开发工作流程
+
+### 代码提交规范
+- 提交信息必须使用简体中文（可选：符合约定式提交规范）
+- 每次提交应针对单一问题或功能
+- 提交前必须通过本地测试和代码检查
+
+### 代码审查要求
+- 所有代码必须经过至少一名团队成员的审查
+- 审查者需验证代码是否符合本宪章的核心原则
+- 审查意见必须具体、建设性、简体中文
+
+### 分支管理策略
+- 主分支（main/master）保持稳定，仅包含经过验证的代码
+- 功能开发在独立的特性分支进行
+- 合并前必须通过 CI/CD 流程的所有检查
+
+## 治理规则
+
+本宪章是项目开发的最高指导原则，优先级高于其他实践文档：
+- 所有代码审查和合并请求必须验证是否符合本宪章
+- 引入复杂性或偏离原则的设计必须有充分的技术理由，并记录在案
+- 宪章的修订必须经过团队评审、投票通过，并提供迁移计划
+- 宪章修订遵循语义化版本规范：
+  - 主版本号（MAJOR）：向后不兼容的治理规则变更或原则删除/重新定义
+  - 次版本号（MINOR）：新增原则或显著扩展指导内容
+  - 修订号（PATCH）：澄清说明、措辞优化、错误修正
+- 每季度进行一次合规性审查，评估实际执行情况并持续改进
+
+**Version**: 1.1.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
