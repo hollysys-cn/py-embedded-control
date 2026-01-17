@@ -28,9 +28,9 @@
 
 **目标**: 准备开发环境和工具链验证
 
-- [ ] T001 验证 Bash 3.2 兼容性约束清单(无关联数组、使用 `2>&1` 替代 `&>`、避免 `readarray`)
-- [ ] T002 验证 shellcheck 工具可用性(`shellcheck --version`)
-- [ ] T003 创建脚本模板框架(shebang: `#!/usr/bin/env bash`, `set -e`, 颜色输出函数)
+- [X] T001 验证 Bash 3.2 兼容性约束清单(无关联数组、使用 `2>&1` 替代 `&>`、避免 `readarray`)
+- [X] T002 验证 shellcheck 工具可用性(`shellcheck --version`)
+- [X] T003 创建脚本模板框架(shebang: `#!/usr/bin/env bash`, `set -e`, 颜色输出函数)
 
 ---
 
@@ -38,9 +38,9 @@
 
 **目标**: 创建所有脚本依赖的共享工具和约定
 
-- [ ] T004 [P] 定义脚本输出格式规范(INFO/ERROR/WARN 前缀, TTY 颜色检测)
-- [ ] T005 [P] 定义退出码规范(0=成功, 1=错误, 2=参数错误, 130=用户中断)
-- [ ] T006 [P] 定义参数解析模式(--help, 位置参数, 标志参数)
+- [X] T004 [P] 定义脚本输出格式规范(INFO/ERROR/WARN 前缀, TTY 颜色检测)
+- [X] T005 [P] 定义退出码规范(0=成功, 1=错误, 2=参数错误, 130=用户中断)
+- [X] T006 [P] 定义参数解析模式(--help, 位置参数, 标志参数)
 
 ---
 
@@ -52,35 +52,35 @@
 
 ### 3.1 构建脚本实现
 
-- [ ] T007 [US1] 创建 build.sh 骨架(shebang, set -e, 帮助函数) 于 build.sh
-- [ ] T008 [US1] 实现 build.sh 参数解析(--clean, --help) 于 build.sh
-- [ ] T009 [US1] 实现 Docker 镜像构建逻辑(`docker-compose build`) 于 build.sh
-- [ ] T010 [US1] 实现容器内 Make 构建(`docker exec ... make`) 于 build.sh
-- [ ] T011 [US1] 实现 --clean 清理逻辑(删除 build/, bin/, 执行 make clean) 于 build.sh
-- [ ] T012 [P] [US1] 验证 build.sh 在 Git Bash 中路径处理正确(测试: `$PWD/config` 绝对路径构造, `./build` 相对路径, Git Bash 路径自动转换 C:\ → /c/)
+- [X] T007 [US1] 创建 build.sh 骨架(shebang, set -e, 帮助函数) 于 build.sh
+- [X] T008 [US1] 实现 build.sh 参数解析(--clean, --help) 于 build.sh
+- [X] T009 [US1] 实现 Docker 镜像构建逻辑(`docker-compose build`) 于 build.sh
+- [X] T010 [US1] 实现容器内 Make 构建(`docker exec ... make`) 于 build.sh
+- [X] T011 [US1] 实现 --clean 清理逻辑(删除 build/, bin/, 执行 make clean) 于 build.sh
+- [X] T012 [P] [US1] 验证 build.sh 在 Git Bash 中路径处理正确(测试: `$PWD/config` 绝对路径构造, `./build` 相对路径, Git Bash 路径自动转换 C:\ → /c/)
 
 ### 3.2 运行脚本实现
 
-- [ ] T013 [US1] 创建 run.sh 骨架 于 run.sh
-- [ ] T014 [US1] 实现 run.sh 参数解析([config_file], --shell, --help) 于 run.sh
-- [ ] T015 [US1] 实现配置文件存在性检查 于 run.sh
-- [ ] T016 [US1] 实现应用运行逻辑(`docker exec python ...`) 于 run.sh
-- [ ] T017 [US1] 实现 --shell 模式(`docker exec -it bash`) 于 run.sh
-- [ ] T018 [P] [US1] 验证 run.sh 默认配置文件路径(config/pid_temperature.yaml)
+- [X] T013 [US1] 创建 run.sh 骨架 于 run.sh
+- [X] T014 [US1] 实现 run.sh 参数解析([config_file], --shell, --help) 于 run.sh
+- [X] T015 [US1] 实现配置文件存在性检查 于 run.sh
+- [X] T016 [US1] 实现应用运行逻辑(`docker exec python ...`) 于 run.sh
+- [X] T017 [US1] 实现 --shell 模式(`docker exec -it bash`) 于 run.sh
+- [X] T018 [P] [US1] 验证 run.sh 默认配置文件路径(config/pid_temperature.yaml)
 
 ### 3.3 测试脚本实现
 
-- [ ] T019 [US1] 创建 test.sh 骨架 于 test.sh
-- [ ] T020 [US1] 实现 test.sh 参数解析(--lint, --unit, --help) 于 test.sh
-- [ ] T021 [US1] 实现静态分析逻辑(`docker exec ... flake8`) 于 test.sh
-- [ ] T022 [US1] 实现单元测试逻辑(`docker exec ... pytest`) 于 test.sh
-- [ ] T023 [P] [US1] 验证 test.sh 退出码正确性(测试失败时退出码为 1)
+- [X] T019 [US1] 创建 test.sh 骨架 于 test.sh
+- [X] T020 [US1] 实现 test.sh 参数解析(--lint, --unit, --help) 于 test.sh
+- [X] T021 [US1] 实现静态分析逻辑(`docker exec ... flake8`) 于 test.sh
+- [X] T022 [US1] 实现单元测试逻辑(`docker exec ... pytest`) 于 test.sh
+- [X] T023 [P] [US1] 验证 test.sh 退出码正确性(测试失败时退出码为 1)
 
 ### 3.4 Windows 平台集成测试
 
-- [ ] T024 [US1] 在 Git Bash 环境测试完整工作流(build → test → run)
-- [ ] T025 [US1] 在 WSL 环境测试完整工作流
-- [ ] T026 [US1] 验证脚本输出格式在 Git Bash 终端正确显示(颜色、换行)
+- [X] T024 [US1] 在 Git Bash 环境测试完整工作流(build → test → run)
+- [X] T025 [US1] 在 WSL 环境测试完整工作流
+- [X] T026 [US1] 验证脚本输出格式在 Git Bash 终端正确显示(颜色、换行)
 
 ---
 
@@ -113,21 +113,21 @@
 
 ### 5.1 迁移文档创建
 
-- [ ] T034 [P] [US4] 创建 MIGRATION_FROM_POWERSHELL.md 于根目录
-- [ ] T035 [US4] 编写 PowerShell 到 Bash 命令映射表(build.ps1 → build.sh 等)
-- [ ] T036 [US4] 记录常见问题和解决方案(Git Bash 路径、WSL 权限等)
+- [X] T034 [P] [US4] 创建 MIGRATION_FROM_POWERSHELL.md 于根目录
+- [X] T035 [US4] 编写 PowerShell 到 Bash 命令映射表(build.ps1 → build.sh 等)
+- [X] T036 [US4] 记录常见问题和解决方案(Git Bash 路径、WSL 权限等)
 
 ### 5.2 文档更新
 
-- [ ] T037 [US4] 更新 README.md 快速开始部分(使用 ./build.sh 替代 .\build.ps1) 于 README.md
+- [X] T037 [US4] 更新 README.md 快速开始部分(使用 ./build.sh 替代 .\build.ps1) 于 README.md
 - [ ] T038 [US4] 更新 docs/guides/WINDOWS_QUICKSTART.md 添加 Git Bash/WSL 安装指引 于 docs/guides/WINDOWS_QUICKSTART.md
 - [ ] T039 [US4] 更新 PROJECT_FILES.md 脚本文件清单 于 PROJECT_FILES.md
 
 ### 5.3 脚本帮助完善
 
-- [ ] T040 [P] [US4] 完善 build.sh --help 输出(清晰的使用示例)
-- [ ] T041 [P] [US4] 完善 run.sh --help 输出
-- [ ] T042 [P] [US4] 完善 test.sh --help 输出
+- [X] T040 [P] [US4] 完善 build.sh --help 输出(清晰的使用示例)
+- [X] T041 [P] [US4] 完善 run.sh --help 输出
+- [X] T042 [P] [US4] 完善 test.sh --help 输出
 
 ---
 

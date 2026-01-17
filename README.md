@@ -42,7 +42,7 @@
 ## 🚀 快速开始
 
 > **⚠️ 重要**: 本项目已迁移到 **Bash 脚本**实现跨平台支持。
-> 
+>
 > - **Windows 用户**: 需要 [Git Bash](https://gitforwindows.org/) 或 WSL (`wsl --install`)
 > - **迁移指南**: [MIGRATION_FROM_POWERSHELL.md](MIGRATION_FROM_POWERSHELL.md)
 
@@ -52,7 +52,7 @@
 # 1. 构建项目
 ./build.sh
 
-# 2. 运行测试  
+# 2. 运行测试
 ./test.sh
 
 # 3. 运行 PID 示例
