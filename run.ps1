@@ -1,5 +1,5 @@
-# PowerShell 运行脚本
-# 用于在 Windows 环境中运行项目（使用 Docker）
+# PowerShell Run Script
+# Run PLCopen Python Runtime on Windows using Docker
 
 param(
     [string]$Config = "config/pid_temperature.yaml",
@@ -19,36 +19,36 @@ function Write-Error-Custom {
     Write-Host "[ERROR] $Message" -ForegroundColor Red
 }
 
-# 检查 Docker 是否可用
+# Check if Docker is available
 function Test-Docker {
     try {
         $null = docker --version
         return $true
     } catch {
-        Write-Error-Custom "Docker 未安装或未运行"
+        Write-Error-Custom "Docker is not installed or not running"
         return $false
     }
 }
 
-# 主逻辑
+# Main logic
 if (-not (Test-Docker)) {
     exit 1
 }
 
 if ($Shell) {
-    Write-Info "启动 Docker 开发环境 Shell..."
+    Write-Info "Starting Docker development shell..."
     docker-compose run --rm dev bash
     exit 0
 }
 
 if ($Debug) {
     $Config = "config/pid_temperature_debug.yaml"
-    Write-Info "使用调试配置: $Config"
-    Write-Info "调试端口: 5678"
-    Write-Info "VS Code: 按 F5 选择 'Python: 附加到运行时'"
+    Write-Info "Using debug configuration: $Config"
+    Write-Info "Debug port: 5678"
+    Write-Info "VS Code: Press F5 and select 'Python: Attach to Runtime'"
 }
 
-Write-Info "启动运行时: $Config"
-Write-Info "按 Ctrl+C 停止运行"
+Write-Info "Starting runtime: $Config"
+Write-Info "Press Ctrl+C to stop"
 
-docker-compose run --rm --service-ports dev bash -c "./bin/plcopen_runtime --config $Config"
+docker-compose run --rm --service-ports dev bash -c "cd /workspace && ./bin/plcopen_runtime --config $Config"

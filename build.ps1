@@ -1,5 +1,5 @@
-# PowerShell 构建脚本
-# 用于在 Windows 环境中构建项目（使用 Docker）
+# PowerShell Build Script
+# Build PLCopen Python Runtime on Windows using Docker
 
 param(
     [switch]$Runtime,
@@ -22,114 +22,114 @@ function Write-Error-Custom {
     Write-Host "[ERROR] $Message" -ForegroundColor Red
 }
 
-# 检查 Docker 是否可用
+# Check if Docker is available
 function Test-Docker {
     try {
         $null = docker --version
         return $true
     } catch {
-        Write-Error-Custom "Docker 未安装或未运行"
-        Write-Host "请安装 Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
+        Write-Error-Custom "Docker is not installed or not running"
+        Write-Host "Please install Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
         return $false
     }
 }
 
-# 构建 Docker 镜像
+# Build Docker image
 function Build-DockerImage {
-    Write-Info "构建 Docker 镜像..."
+    Write-Info "Building Docker image..."
     docker-compose build dev
     if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "Docker 镜像构建失败"
+        Write-Error-Custom "Docker image build failed"
         exit 1
     }
-    Write-Info "Docker 镜像构建成功"
+    Write-Info "Docker image built successfully"
 }
 
-# 构建运行时
+# Build runtime
 function Build-Runtime {
-    Write-Info "构建运行时程序..."
-    docker-compose run --rm dev bash -c "make runtime"
+    Write-Info "Building runtime..."
+    docker-compose run --rm dev bash -c "cd /workspace && mkdir -p bin && make runtime"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "运行时构建失败"
+        Write-Error-Custom "Runtime build failed"
         exit 1
     }
-    Write-Info "运行时构建成功"
+    Write-Info "Runtime built successfully"
 }
 
-# 构建 Python 扩展
+# Build Python extension
 function Build-Python {
-    Write-Info "构建 Python 扩展..."
-    docker-compose run --rm dev bash -c "python3 setup.py build_ext --inplace"
+    Write-Info "Building Python extension..."
+    docker-compose run --rm dev bash -c "cd /workspace && python3 setup.py build_ext --inplace"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "Python 扩展构建失败"
+        Write-Error-Custom "Python extension build failed"
         exit 1
     }
-    Write-Info "Python 扩展构建成功"
+    Write-Info "Python extension built successfully"
 }
 
-# 清理构建产物
+# Clean build artifacts
 function Clean-Build {
-    Write-Info "清理构建产物..."
-    docker-compose run --rm dev bash -c "make clean"
-    Write-Info "清理完成"
+    Write-Info "Cleaning build artifacts..."
+    docker-compose run --rm dev bash -c "cd /workspace && make clean"
+    Write-Info "Clean completed"
 }
 
-# 运行代码质量检查
+# Run code quality checks
 function Run-Lint {
-    Write-Info "运行代码质量检查..."
-    docker-compose run --rm dev bash -c "make lint"
+    Write-Info "Running code quality checks..."
+    docker-compose run --rm dev bash -c "cd /workspace && make lint"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "代码质量检查发现问题"
+        Write-Error-Custom "Code quality issues found"
         exit 1
     }
-    Write-Info "代码质量检查通过"
+    Write-Info "Code quality checks passed"
 }
 
-# 运行测试
+# Run tests
 function Run-Tests {
-    Write-Info "运行测试..."
-    docker-compose run --rm dev bash -c "make test"
+    Write-Info "Running tests..."
+    docker-compose run --rm dev bash -c "cd /workspace && python3 test_module.py"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "测试失败"
+        Write-Error-Custom "Tests failed"
         exit 1
     }
-    Write-Info "测试通过"
+    Write-Info "Tests passed"
 }
 
-# 主逻辑
+# Main logic
 if (-not (Test-Docker)) {
     exit 1
 }
 
-# 如果没有指定参数，显示帮助
+# Show help if no parameters specified
 if (-not ($Runtime -or $Python -or $All -or $Clean -or $Test -or $Lint)) {
     Write-Host @"
-用法: .\build.ps1 [选项]
+Usage: .\build.ps1 [options]
 
-选项:
-  -Runtime    构建 C 运行时程序
-  -Python     构建 Python 扩展
-  -All        构建所有（运行时 + Python 扩展）
-  -Clean      清理构建产物
-  -Lint       运行代码质量检查
-  -Test       运行测试
+Options:
+  -Runtime    Build C runtime
+  -Python     Build Python extension
+  -All        Build all (runtime + Python extension)
+  -Clean      Clean build artifacts
+  -Lint       Run code quality checks
+  -Test       Run tests
 
-示例:
-  .\build.ps1 -All          # 构建所有
-  .\build.ps1 -Runtime      # 仅构建运行时
-  .\build.ps1 -Lint         # 代码质量检查
-  .\build.ps1 -Clean        # 清理
+Examples:
+  .\build.ps1 -All          # Build everything
+  .\build.ps1 -Runtime      # Build runtime only
+  .\build.ps1 -Lint         # Run code checks
+  .\build.ps1 -Clean        # Clean build
 
-注意: 需要 Docker Desktop 运行
+Note: Docker Desktop must be running
 "@
     exit 0
 }
 
 try {
-    # 确保 Docker 镜像存在
+    # Ensure Docker image exists
     $imageExists = docker images plcopen-runtime-dev -q
     if (-not $imageExists) {
-        Write-Info "Docker 镜像不存在，开始构建..."
+        Write-Info "Docker image does not exist, building..."
         Build-DockerImage
     }
 
@@ -157,8 +157,8 @@ try {
         Run-Tests
     }
 
-    Write-Info "所有操作完成"
+    Write-Info "All operations completed successfully"
 } catch {
-    Write-Error-Custom "构建过程中发生错误: $_"
+    Write-Error-Custom "Build error: $_"
     exit 1
 }
