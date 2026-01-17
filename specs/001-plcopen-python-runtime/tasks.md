@@ -197,8 +197,8 @@
 
 - [X] T070 [P] 运行 cppcheck 静态分析 Makefile（添加 make lint 目标，检查 C 代码）
 - [X] T071 [P] 运行 pylint/flake8 分析 Makefile（检查 Python 代码，PEP 8 规范）
-- [ ] T072 [P] 确保所有 C/Python 注释使用简体中文（符合 constitution.md 原则一）
-- [ ] T073 [P] 验证所有文件使用 UTF-8 无 BOM，LF 行尾（通过 .gitattributes 强制）
+- [X] T072 [P] 确保所有 C/Python 注释使用简体中文（符合 constitution.md 原则一）
+- [X] T073 [P] 验证所有文件使用 UTF-8 无 BOM，LF 行尾（通过 .gitattributes 强制）
 
 ### 许可证和合规
 
