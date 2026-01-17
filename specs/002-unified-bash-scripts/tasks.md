@@ -57,7 +57,7 @@
 - [ ] T009 [US1] 实现 Docker 镜像构建逻辑(`docker-compose build`) 于 build.sh
 - [ ] T010 [US1] 实现容器内 Make 构建(`docker exec ... make`) 于 build.sh
 - [ ] T011 [US1] 实现 --clean 清理逻辑(删除 build/, bin/, 执行 make clean) 于 build.sh
-- [ ] T012 [P] [US1] 验证 build.sh 在 Git Bash 中路径处理正确(相对路径 + $PWD)
+- [ ] T012 [P] [US1] 验证 build.sh 在 Git Bash 中路径处理正确(测试: `$PWD/config` 绝对路径构造, `./build` 相对路径, Git Bash 路径自动转换 C:\ → /c/)
 
 ### 3.2 运行脚本实现
 
@@ -94,7 +94,7 @@
 
 - [ ] T027 [P] [US2] 在 macOS (Bash 3.2) 上验证 build.sh 语法兼容性
 - [ ] T028 [P] [US2] 在 macOS 上验证 run.sh 和 test.sh
-- [ ] T029 [US2] 使用 shellcheck 静态分析三个脚本(--shell=bash)
+- [ ] T029 [US2] 使用 shellcheck 静态分析三个脚本(`shellcheck --shell=bash --exclude=SC2086 build.sh run.sh test.sh`)
 - [ ] T030 [US2] 修复任何 Bash 3.2 不兼容问题(如使用了 `&>` 或 `readarray`)
 
 ### 4.2 Linux 验证
@@ -147,7 +147,8 @@
 
 - [ ] T048 运行 shellcheck 验证所有 Bash 脚本质量
 - [ ] T049 验证所有文档中的脚本引用已更新(无 .ps1 引用)
-- [ ] T050 执行完整回归测试(三平台 × 三脚本 = 9 个测试用例)
+- [ ] T050 执行完整回归测试(三平台 × 三脚本 = 9 个基础用例 + 场景: 首次构建/增量构建/清理构建/Shell模式/配置文件指定/测试失败处理)
+- [ ] T056 [FR-007] 验证向后兼容性(现有开发工作流不中断: 对比 PowerShell 脚本行为,确保功能等价)
 
 ### 6.3 成功标准验证
 
