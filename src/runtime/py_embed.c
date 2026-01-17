@@ -10,6 +10,10 @@
 #include <libgen.h>
 
 int py_embed_init(void) {
+    // 禁用 frozen modules 以支持 debugpy 断点
+    // 必须在 Py_Initialize() 之前设置
+    setenv("PYTHONFROZENMODULES", "off", 1);
+
     // 初始化 Python 解释器
     Py_Initialize();
 

@@ -1,4 +1,4 @@
-﻿# PowerShell Run Script
+# PowerShell Run Script
 # Run PLCopen Python Runtime on Windows using Docker
 
 param(
@@ -118,4 +118,3 @@ if ($Debug) {
     $bashCmd = "cd /workspace && ./bin/plcopen_runtime --config $Config"
     docker exec -it plcopen-dev bash -c $bashCmd
 }
-

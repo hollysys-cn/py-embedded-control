@@ -193,11 +193,35 @@ static int parse_key_value(const char* line, char* key, char* value) {
     size_t key_len = colon - line;
     strncpy(key, line, key_len);
     key[key_len] = '\0';
-    trim(key);
+    char* trimmed_key = trim(key);
+    if (trimmed_key != key) {
+        memmove(key, trimmed_key, strlen(trimmed_key) + 1);
+    }
 
     // 提取值
     strcpy(value, colon + 1);
-    trim(value);
+
+    // 去除行内注释（查找 '#' 并截断）
+    char* comment = strchr(value, '#');
+    if (comment) {
+        *comment = '\0';
+    }
+
+    // 去除前后空白
+    char* trimmed_value = trim(value);
+    if (trimmed_value != value) {
+        memmove(value, trimmed_value, strlen(trimmed_value) + 1);
+    }
+
+    // 去除引号
+    if (value[0] == '"') {
+        size_t len = strlen(value);
+        if (len > 1 && value[len-1] == '"') {
+            // 去除首尾引号
+            memmove(value, value + 1, len - 1);
+            value[len - 2] = '\0';
+        }
+    }
 
     return 0;
 }

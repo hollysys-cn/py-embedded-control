@@ -100,6 +100,8 @@ PID 温度控制初始化完成
 
 ## 第四步：调试功能（可选）
 
+> **快速上手**：查看 [调试快速指南](DEBUG_QUICKSTART.md) 获取一分钟调试教程
+
 ### 4.1 启动调试模式
 
 ```powershell
@@ -108,47 +110,84 @@ PID 温度控制初始化完成
 
 **预期输出**：
 ```
+[INFO] Starting development container...
+[+] Running 1/1
+ ✔ Container plcopen-dev  Started
 [INFO] 使用调试配置: config/pid_temperature_debug.yaml
 [INFO] 调试端口: 5678
-[INFO] VS Code: 按 F5 选择 'Python: 附加到运行时'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  调试模式已启动
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 [INFO] 启动运行时...
-[INFO] 启动 debugpy 服务器: 0.0.0.0:5678
+
 [INFO] debugpy 服务器已启动，等待调试器连接...
+
+下一步：在 VS Code 中附加调试器
+
+  1. 按 F5 或点击'运行和调试'
+  2. 选择: 'Python: 附加到运行时（本地）'
+  3. 在 python/examples/pid_temperature.py 中设置断点
+
+调试提示：
+  • F10: 单步跳过
+  • F11: 单步进入
+  • 在'变量'面板查看实时数据
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[INFO] 查看程序输出: Get-Job -Name PLCRuntime | Receive-Job
+[INFO] 停止调试: docker exec plcopen-dev pkill -f plcopen_runtime
+
+按任意键查看运行时输出...
 ```
 
-### 4.2 使用 VS Code 附加调试器
+**重要提示**：
+- 此时**不要按键**，让程序在后台运行
+- 程序正在等待调试器连接
+- 先在 VS Code 中附加调试器，然后再按键查看输出
 
-1. **在 VS Code 中打开项目**
+### 4.2 在 VS Code 中附加调试器
+
+1. **在 VS Code 中打开项目**（如果还没打开）
    ```powershell
    code .
    ```
 
-2. **打开 Python 脚本**
-   - 文件：`python/examples/pid_temperature_control.py`
+2. **设置断点**
+   - 打开 [python/examples/pid_temperature.py](../../python/examples/pid_temperature.py)
+   - 在 `step()` 函数第一行（约第 54 行）点击行号左侧
+   - 出现红色圆点表示断点已设置
 
-3. **设置断点**
-   - 点击行号左侧，在 `step()` 函数第一行设置断点
+3. **启动调试**
+   - 按 `F5`（或点击左侧"运行和调试"图标）
+   - 选择：**"Python: 附加到运行时（本地）"**
+   - 或选择：**"Python: 附加到 Docker 容器 (x86_64)"**
 
-4. **启动调试**
-   - 按 `F5`
-   - 选择配置：**"Python: 附加到运行时（本地）"**
-
-5. **调试操作**
+4. **开始调试**
    - 程序会在断点处暂停
-   - 查看变量值（左侧"变量"面板）
-   - 使用调试工具栏：
-     - **F5** - 继续
-     - **F10** - 单步跳过
-     - **F11** - 单步进入
-   - 在调试控制台输入 Python 表达式：
-     ```python
-     >>> current_temp
-     72.5
-     >>> output
-     45.8
+   - 查看左侧"变量"面板的实时数据
+   - 使用 F10 单步执行
+   - 在"调试控制台"输入 Python 表达式
+
+5. **停止调试**
+   - 在 VS Code 中按 `Shift+F5`
+   - 在 PowerShell 中运行：
+     ```powershell
+     docker exec plcopen-dev pkill -f plcopen_runtime
      ```
 
-## 第五步：代码质量检查（可选）
+**完整调试教程**：参见 [调试快速指南](DEBUG_QUICKSTART.md)
+
+**调试快捷键**：
+
+| 快捷键 | 操作 | 说明 |
+|--------|------|------|
+| F5 | 继续 | 运行到下一个断点 |
+| F10 | 单步跳过 | 执行当前行 |
+| F11 | 单步进入 | 进入函数内部 |
+| Shift+F5 | 停止 | 断开调试器 |
 
 ```powershell
 # 运行代码质量检查
