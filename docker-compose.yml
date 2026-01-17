@@ -6,11 +6,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: plcopen-runtime:latest
+    image: plcopen-runtime-dev:latest
     container_name: plcopen-dev
     platform: linux/amd64
     volumes:
-      - .:/app
+      - .:/workspace
+    working_dir: /workspace
     ports:
       - "5678:5678"  # debugpy 调试端口
     environment:
@@ -24,11 +25,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: plcopen-runtime:arm64
+    image: plcopen-runtime-arm64:latest
     container_name: plcopen-arm-test
     platform: linux/arm64
     volumes:
-      - .:/app
+      - .:/workspace
+    working_dir: /workspace
     ports:
       - "5679:5678"  # debugpy 调试端口（主机端口 5679）
     environment:

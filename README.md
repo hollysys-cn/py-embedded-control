@@ -36,20 +36,46 @@
 
 ## 快速开始
 
-### 方式 1：Docker（推荐）
+### 方式 1：Docker（推荐，支持 Windows/Mac/Linux）
+
+#### Windows 环境
+
+```powershell
+# 1. 确保 Docker Desktop 正在运行
+
+# 2. 构建项目
+.\build.ps1 -All
+
+# 3. 运行 PID 温度控制示例
+.\run.ps1
+
+# 4. 运行调试模式（支持 VS Code 远程调试）
+.\run.ps1 -Debug
+
+# 5. 进入开发环境 Shell
+.\run.ps1 -Shell
+```
+
+#### Linux/Mac 环境
 
 ```bash
 # 构建镜像
-docker build -t plcopen-runtime:latest .
+docker-compose build dev
 
-# 测试 C 扩展模块
-docker run --rm plcopen-runtime:latest python3 -c "import plcopen_c; print('✓ 模块导入成功')"
+# 构建运行时
+docker-compose run --rm dev make runtime
+
+# 构建 Python 扩展
+docker-compose run --rm dev python3 setup.py build_ext --inplace
 
 # 运行 PID 示例
-docker run --rm plcopen-runtime:latest python3 python/examples/basic_pid.py
+docker-compose run --rm dev ./bin/plcopen_runtime --config config/pid_temperature.yaml
+
+# 进入开发环境
+docker-compose run --rm dev bash
 ```
 
-### 方式 2：原生安装（需要 GCC 和 Python 开发环境）
+### 方式 2：原生安装（仅 Linux）
 
 **前置要求**：
 - Linux (Ubuntu 20.04+ / Debian 10+)
@@ -71,11 +97,12 @@ source venv/bin/activate
 # 3. 安装依赖
 pip install -r requirements.txt
 
-# 4. 构建 C 扩展
+# 4. 构建运行时和 Python 扩展
+make runtime
 make build
 
-# 5. 安装到虚拟环境
-make install
+# 5. 运行示例
+./bin/plcopen_runtime --config config/pid_temperature.yaml
 ```
 
 ## 使用示例
