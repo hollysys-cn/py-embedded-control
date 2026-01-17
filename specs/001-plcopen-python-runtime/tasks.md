@@ -20,13 +20,16 @@
 
 - [ ] T001 根据 plan.md 创建项目目录结构（src/, python/, tests/, config/, docs/）
 - [ ] T002 创建 .gitignore 和 .gitattributes（强制 UTF-8 无 BOM，LF 行尾）
-- [ ] T003 [P] 创建 Makefile 定义构建目标（build, clean, install, test）
+- [ ] T003 [P] 创建 Makefile 定义构建目标（build, clean, install, test, docker-build, docker-dev, docker-arm）
 - [ ] T004 [P] 创建 requirements.txt 定义 Python 依赖（debugpy, PyYAML, pytest）
-- [ ] T005 [P] 创建 README.md 包含项目说明、快速开始、许可证信息
+- [ ] T005 [P] 创建 README.md 包含项目说明、快速开始（Docker 和原生方式）、许可证信息
 - [ ] T006 [P] 创建配置文件模板 config/runtime.yaml.example（周期时间、脚本路径、日志配置）
 - [ ] T007 创建 Python 包结构 python/plcopen/__init__.py（版本号、包导出）
+- [ ] T007a [P] 创建 Dockerfile（多架构支持 x86_64/ARM，基于 debian:stable，安装 GCC/Python3/cppcheck，配置阿里云 PyPI 镜像）
+- [ ] T007b [P] 创建 docker-compose.yml（定义 dev 服务 x86_64 和 arm-test 服务 ARM64，映射调试端口 5678/5679，挂载工作目录）
+- [ ] T007c [P] 创建 .dockerignore（排除 .git、__pycache__、*.pyc、*.o、*.so、build/、docs/、.vscode/）
 
-**检查点**: 项目结构就绪，可以开始开发基础设施代码
+**检查点**: 项目结构就绪，Docker 开发环境可用（支持 x86_64 开发和 ARM 功能测试），可以开始开发基础设施代码
 
 ---
 

@@ -69,6 +69,132 @@ pip3 install plcopen-runtime-1.0.0-py3-none-linux_x86_64.whl
 python3 -c "import plcopen; print('安装成功')"
 ```
 
+### 方式 C：使用 Docker 开发环境（推荐用于 Windows/Mac 开发者）
+
+**适用场景**: 本地没有 Linux 环境，需要跨平台开发
+
+#### C.1 启动开发容器（x86_64）
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/hollysys-cn/py-embedded-control.git
+cd py-embedded-control
+
+# 2. 启动开发容器
+docker-compose up -d dev
+
+# 3. 进入容器
+docker-compose exec dev bash
+
+# 4. 构建项目（容器内）
+cd /workspace
+make build
+
+# 5. 验证安装
+python3 -c "import plcopen; print(plcopen.__version__)"
+```
+
+#### C.2 ARM 架构测试（模拟树莓派）
+
+```bash
+# 启动 ARM 容器（需要 Docker 支持多架构）
+docker-compose up -d arm-test
+docker-compose exec arm-test bash
+
+# 在 ARM 容器内构建和测试
+make build
+make test
+```
+
+**⚠️ 重要说明**：Docker 的 ARM 模拟（QEMU）仅用于功能测试，**不能用于性能基准测试**。性能测试（周期稳定性、CPU 占用、内存泄漏）必须在实际树莓派或 ARM 嵌入式设备上执行，因为 QEMU 模拟器的性能特性与真实硬件差异显著。
+
+#### C.3 VSCode 远程调试配置
+
+在容器中运行运行时，宿主机 VSCode 可直接连接。
+
+**创建 .vscode/launch.json**：
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "附加到 Docker 容器",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/workspace"
+        }
+      ],
+      "justMyCode": false
+    }
+  ]
+}
+```
+
+**启动调试**：
+```bash
+# 容器内启动运行时（启用调试）
+docker-compose exec dev plcopen-runtime --config config/pid_temperature_debug.yaml
+
+# 宿主机 VSCode 按 F5 连接调试器
+```
+
+#### C.4 常见问题
+
+**Q: ARM 容器启动失败，提示 "exec format error"**
+
+A: 需要启用 Docker 多架构支持：
+```bash
+# 安装 QEMU（仅首次需要）
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+# 验证支持的平台
+docker buildx ls
+```
+
+**Q: 容器内编译速度慢**
+
+A: 使用 Docker 卷缓存优化构建性能：
+```bash
+# 在 docker-compose.yml 中添加构建缓存卷
+volumes:
+  - build-cache:/workspace/build
+```
+
+**Q: 如何在容器内使用 Git**
+
+A: 配置 Git 用户信息：
+```bash
+docker-compose exec dev bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+**Q: 如何将构建产物部署到树莓派**
+
+A: 从 ARM 容器打包并传输：
+```bash
+# 在 ARM 容器内构建
+docker-compose exec arm-test make build
+
+# 打包编译产物
+docker-compose exec arm-test tar -czf /workspace/plcopen-runtime-arm.tar.gz build/ python/ config/
+
+# 复制到树莓派
+scp plcopen-runtime-arm.tar.gz pi@raspberrypi.local:~
+
+# 在树莓派上解压运行
+ssh pi@raspberrypi.local
+tar -xzf plcopen-runtime-arm.tar.gz
+./build/plcopen-runtime --config config/pid_temperature.yaml
+```
+
 ---
 
 ## 第 2 步：创建配置文件
