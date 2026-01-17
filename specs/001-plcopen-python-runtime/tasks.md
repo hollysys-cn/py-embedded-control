@@ -18,16 +18,16 @@
 
 **目的**: 建立项目结构和开发环境
 
-- [ ] T001 根据 plan.md 创建项目目录结构（src/, python/, tests/, config/, docs/）
-- [ ] T002 创建 .gitignore 和 .gitattributes（强制 UTF-8 无 BOM，LF 行尾）
-- [ ] T003 [P] 创建 Makefile 定义构建目标（build, clean, install, test, docker-build, docker-dev, docker-arm）
-- [ ] T004 [P] 创建 requirements.txt 定义 Python 依赖（debugpy, PyYAML, pytest）
-- [ ] T005 [P] 创建 README.md 包含项目说明、快速开始（Docker 和原生方式）、许可证信息
-- [ ] T006 [P] 创建配置文件模板 config/runtime.yaml.example（周期时间、脚本路径、日志配置）
-- [ ] T007 创建 Python 包结构 python/plcopen/__init__.py（版本号、包导出）
-- [ ] T007a [P] 创建 Dockerfile（多架构支持 x86_64/ARM，基于 debian:stable，安装 GCC/Python3/cppcheck，配置阿里云 PyPI 镜像）
-- [ ] T007b [P] 创建 docker-compose.yml（定义 dev 服务 x86_64 和 arm-test 服务 ARM64，映射调试端口 5678/5679，挂载工作目录）
-- [ ] T007c [P] 创建 .dockerignore（排除 .git、__pycache__、*.pyc、*.o、*.so、build/、docs/、.vscode/）
+- [X] T001 根据 plan.md 创建项目目录结构（src/, python/, tests/, config/, docs/）
+- [X] T002 创建 .gitignore 和 .gitattributes（强制 UTF-8 无 BOM，LF 行尾）
+- [X] T003 [P] 创建 Makefile 定义构建目标（build, clean, install, test, docker-build, docker-dev, docker-arm）
+- [X] T004 [P] 创建 requirements.txt 定义 Python 依赖（debugpy, PyYAML, pytest）
+- [X] T005 [P] 创建 README.md 包含项目说明、快速开始（Docker 和原生方式）、许可证信息
+- [X] T006 [P] 创建配置文件模板 config/runtime.yaml.example（周期时间、脚本路径、日志配置）
+- [X] T007 创建 Python 包结构 python/plcopen/__init__.py（版本号、包导出）
+- [X] T007a [P] 创建 Dockerfile（多架构支持 x86_64/ARM，基于 debian:stable，安装 GCC/Python3/cppcheck，配置阿里云 PyPI 镜像）
+- [X] T007b [P] 创建 docker-compose.yml（定义 dev 服务 x86_64 和 arm-test 服务 ARM64，映射调试端口 5678/5679，挂载工作目录）
+- [X] T007c [P] 创建 .dockerignore（排除 .git、__pycache__、*.pyc、*.o、*.so、build/、docs/、.vscode/）
 
 **检查点**: 项目结构就绪，Docker 开发环境可用（支持 x86_64 开发和 ARM 功能测试），可以开始开发基础设施代码
 
@@ -41,24 +41,24 @@
 
 ### 日志系统
 
-- [ ] T008 实现日志系统 src/runtime/logger.c/h（支持 DEBUG/INFO/WARNING/ERROR 级别）
-- [ ] T009 实现日志轮转机制（基于文件大小，支持配置最大尺寸）
+- [X] T008 实现日志系统 src/runtime/logger.c/h（支持 DEBUG/INFO/WARNING/ERROR 级别）
+- [X] T009 实现日志轮转机制（基于文件大小，支持配置最大尺寸）
 
 ### 配置管理
 
-- [ ] T010 实现配置加载器 src/runtime/config_loader.c/h（解析 YAML 配置文件）
-- [ ] T011 实现配置结构体定义 src/runtime/config.h（RuntimeConfig，包含周期时间、脚本路径）
+- [X] T010 实现配置加载器 src/runtime/config_loader.c/h（解析 YAML 配置文件）
+- [X] T011 实现配置结构体定义 src/runtime/config.h（RuntimeConfig，包含周期时间、脚本路径）
 
 ### Python 嵌入
 
-- [ ] T012 实现 Python 解释器初始化 src/runtime/py_embed.c/h（Py_Initialize, 设置模块路径）
-- [ ] T013 实现 Python 脚本加载和执行 src/runtime/py_embed.c（导入用户脚本，调用 init/step 函数）
-- [ ] T014 实现 Python 异常处理 src/runtime/py_embed.c（捕获 PyErr, 记录日志，防止崩溃）
+- [X] T012 实现 Python 解释器初始化 src/runtime/py_embed.c/h（Py_Initialize, 设置模块路径）
+- [X] T013 实现 Python 脚本加载和执行 src/runtime/py_embed.c（导入用户脚本，调用 init/step 函数）
+- [X] T014 实现 Python 异常处理 src/runtime/py_embed.c（捕获 PyErr, 记录日志，防止崩溃）
 
 ### 调度器
 
-- [ ] T015 实现周期调度器 src/runtime/scheduler.c/h（使用 clock_nanosleep(CLOCK_MONOTONIC)）
-- [ ] T016 实现周期抖动监控 src/runtime/scheduler.c（记录实际周期时间，超过阈值发出警告）
+- [X] T015 实现周期调度器 src/runtime/scheduler.c/h（使用 clock_nanosleep(CLOCK_MONOTONIC)）
+- [X] T016 实现周期抖动监控 src/runtime/scheduler.c（记录实际周期时间，超过阈值发出警告）
 
 **检查点**: 基础设施完成，用户故事可以并行实现
 

@@ -1,0 +1,49 @@
+# PLCopen Python 运行时配置文件示例
+# 复制此文件为 runtime.yaml 并根据需要修改
+
+# 运行时配置
+runtime:
+  # 控制周期（毫秒），范围 10-1000
+  cycle_period_ms: 100
+
+  # Python 控制脚本路径（相对于配置文件或绝对路径）
+  script_path: python/examples/pid_temperature.py
+
+  # 超时阈值（周期的百分比），超过此时间发出警告
+  timeout_threshold_percent: 110
+
+# 日志配置
+logging:
+  # 日志级别：DEBUG, INFO, WARNING, ERROR
+  level: INFO
+
+  # 日志文件路径
+  file: runtime.log
+
+  # 日志轮转大小（MB）
+  max_size_mb: 10
+
+  # 保留的日志文件数量
+  backup_count: 3
+
+# 调试配置（可选）
+debug:
+  # 是否启用远程调试
+  enabled: false
+
+  # 监听地址（0.0.0.0 表示所有网络接口）
+  host: 0.0.0.0
+
+  # debugpy 监听端口
+  port: 5678
+
+  # 连接超时时间（秒）
+  timeout: 5
+
+# 性能配置（可选）
+performance:
+  # CPU 亲和性：绑定到指定 CPU 核心（-1 表示不绑定）
+  cpu_affinity: -1
+
+  # 功能块实例最大数量
+  max_function_blocks: 32

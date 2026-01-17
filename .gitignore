@@ -288,3 +288,21 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,microsoftoffice,python,visualstudiocode
+
+# C/C++ build artifacts
+*.o
+*.a
+*.exe
+*.out
+*.dll
+*.dylib
+
+# Project-specific build outputs
+bin/
+obj/
+runtime.log
+
+# Config files (keep examples)
+config/runtime.yaml
+!config/*.example
+!config/*.yaml.example
