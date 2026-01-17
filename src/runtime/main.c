@@ -1,0 +1,131 @@
+/**
+ * @file main.c
+ * @brief PLCopen Python 运行时主程序
+ *
+ * 运行时主循环，负责周期性调用用户脚本。
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+#include "context.h"
+#include "scheduler.h"
+#include "logger.h"
+#include "py_embed.h"
+
+// 全局信号标志
+static volatile sig_atomic_t g_shutdown_requested = 0;
+
+/**
+ * @brief 信号处理函数
+ */
+static void signal_handler(int signum) {
+    (void)signum;  // 抑制未使用警告
+    g_shutdown_requested = 1;
+}
+
+/**
+ * @brief 打印使用说明
+ */
+static void print_usage(const char* program_name) {
+    printf("PLCopen Python 运行时环境 v0.1.0\n\n");
+    printf("用法: %s [选项]\n\n", program_name);
+    printf("选项:\n");
+    printf("  --config FILE    配置文件路径（默认: config/runtime.yaml）\n");
+    printf("  --help, -h       显示此帮助信息\n");
+    printf("\n");
+}
+
+/**
+ * @brief 主函数
+ */
+int main(int argc, char* argv[]) {
+    const char* config_file = "config/runtime.yaml";
+
+    // 解析命令行参数
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--config") == 0 && i + 1 < argc) {
+            config_file = argv[++i];
+        } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            print_usage(argv[0]);
+            return 0;
+        } else {
+            fprintf(stderr, "未知选项: %s\n", argv[i]);
+            print_usage(argv[0]);
+            return 1;
+        }
+    }
+
+    // 注册信号处理
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    // 初始化运行时上下文
+    if (runtime_context_init(config_file) != 0) {
+        fprintf(stderr, "运行时初始化失败\n");
+        return 1;
+    }
+
+    RuntimeContext* ctx = runtime_context_get();
+
+    // 调用用户脚本的 init() 函数
+    if (py_embed_call_init(&ctx->py_context) != 0) {
+        LOG_ERROR_MSG("init() 函数调用失败");
+        runtime_context_cleanup();
+        return 1;
+    }
+
+    // 初始化调度器
+    SchedulerContext scheduler;
+    if (scheduler_init(&scheduler,
+                      ctx->config.cycle_period_ms,
+                      ctx->config.timeout_threshold_percent) != 0) {
+        LOG_ERROR_MSG("调度器初始化失败");
+        runtime_context_cleanup();
+        return 1;
+    }
+
+    ctx->running = 1;
+    LOG_INFO_MSG("运行时启动：周期=%d ms", ctx->config.cycle_period_ms);
+
+    // 主循环
+    while (ctx->running && !g_shutdown_requested) {
+        struct timespec cycle_start;
+
+        // 记录周期开始时间
+        scheduler_cycle_start(&scheduler, &cycle_start);
+
+        // 调用用户脚本的 step() 函数
+        if (py_embed_call_step(&ctx->py_context) != 0) {
+            LOG_ERROR_MSG("step() 函数执行失败");
+            // 继续运行，不退出
+        }
+
+        // 记录周期结束时间并更新统计
+        double actual_time = scheduler_cycle_end(&scheduler, &cycle_start);
+        (void)actual_time;  // 抑制未使用警告
+
+        ctx->cycle_count++;
+
+        // 等待下一个周期
+        if (scheduler_wait_next_cycle(&scheduler) != 0) {
+            LOG_WARNING_MSG("调度器等待被中断");
+        }
+    }
+
+    // 输出最终统计
+    const SchedulerStats* stats = scheduler_get_stats(&scheduler);
+    LOG_INFO_MSG("运行时停止：总周期=%llu, 平均周期=%.2f ms, 超时次数=%llu",
+                 (unsigned long long)stats->cycle_count,
+                 stats->avg_cycle_time_ms,
+                 (unsigned long long)stats->timeout_count);
+
+    // 清理
+    scheduler_stop(&scheduler);
+    runtime_context_cleanup();
+
+    printf("运行时已正常退出\n");
+    return 0;
+}

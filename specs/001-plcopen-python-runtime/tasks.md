@@ -72,34 +72,34 @@
 
 ### C 功能块实现
 
-- [ ] T017 [P] 定义功能块通用接口 src/function_blocks/fb_common.h（FunctionBlock 结构体，状态、参数、计算方法）
-- [ ] T018 [P] 实现 PID 控制器 src/function_blocks/fb_pid.c/h（位置式 PID，支持 Kp/Ki/Kd 参数）
-- [ ] T019 [P] 实现 PID 参数验证 src/function_blocks/fb_pid.c（限制 Kp/Ki/Kd 到 [0, 1e6]，超出范围 clamp + 警告）
-- [ ] T020 [P] 实现 PID 输出限幅 src/function_blocks/fb_pid.c（output_min/output_max 限制）
-- [ ] T021 [P] 实现 PID 状态管理 src/function_blocks/fb_pid.c（积分累积、上一周期误差存储）
-- [ ] T022 [P] 实现一阶惯性功能块 src/function_blocks/fb_first_order.c/h（传递函数 H(s)=1/(Ts+1)）
-- [ ] T023 [P] 实现一阶惯性参数验证 src/function_blocks/fb_first_order.c（时间常数 T [0.001, 1e6]）
+- [X] T017 [P] 定义功能块通用接口 src/function_blocks/fb_common.h（FunctionBlock 结构体，状态、参数、计算方法）
+- [X] T018 [P] 实现 PID 控制器 src/function_blocks/fb_pid.c/h（位置式 PID，支持 Kp/Ki/Kd 参数）
+- [X] T019 [P] 实现 PID 参数验证 src/function_blocks/fb_pid.c（限制 Kp/Ki/Kd 到 [0, 1e6]，超出范围 clamp + 警告）
+- [X] T020 [P] 实现 PID 输出限幅 src/function_blocks/fb_pid.c（output_min/output_max 限制）
+- [X] T021 [P] 实现 PID 状态管理 src/function_blocks/fb_pid.c（积分累积、上一周期误差存储）
+- [X] T022 [P] 实现一阶惯性功能块 src/function_blocks/fb_first_order.c/h（传递函数 H(s)=1/(Ts+1)）
+- [X] T023 [P] 实现一阶惯性参数验证 src/function_blocks/fb_first_order.c（时间常数 T [0.001, 1e6]）
 
 ### Python C Extension 绑定
 
-- [ ] T024 创建 Python 模块定义 src/python_bindings/plcopen_module.c（PyModuleDef, 模块初始化函数）
-- [ ] T025 [P] 实现 PID Python 包装类 src/python_bindings/py_pid.c（PIDObject, __init__, compute, set_params, get_params, reset 方法）
-- [ ] T026 [P] 实现 PID Python 类型定义 src/python_bindings/py_pid.c（PyTypeObject, 方法表，文档字符串）
-- [ ] T027 [P] 实现一阶惯性 Python 包装类 src/python_bindings/py_first_order.c（FirstOrderObject, compute, set_time_constant）
-- [ ] T028 实现 Python 参数解析 src/python_bindings/py_pid.c（PyArg_ParseTuple, 处理浮点数参数）
-- [ ] T029 实现 Python 异常转换 src/python_bindings/py_pid.c（C 参数验证失败 → Python ValueError/RuntimeError）
-- [ ] T030 创建 setup.py 构建脚本 src/python_bindings/setup.py（setuptools Extension, 指定 C 源文件和编译选项）
+- [X] T024 创建 Python 模块定义 src/python_bindings/plcopen_module.c（PyModuleDef, 模块初始化函数）
+- [X] T025 [P] 实现 PID Python 包装类 src/python_bindings/py_pid.c（PIDObject, __init__, compute, set_params, get_params, reset 方法）
+- [X] T026 [P] 实现 PID Python 类型定义 src/python_bindings/py_pid.c（PyTypeObject, 方法表，文档字符串）
+- [X] T027 [P] 实现一阶惯性 Python 包装类 src/python_bindings/py_first_order.c（FirstOrderObject, compute, set_time_constant）
+- [X] T028 实现 Python 参数解析 src/python_bindings/py_pid.c（PyArg_ParseTuple, 处理浮点数参数）
+- [X] T029 实现 Python 异常转换 src/python_bindings/py_pid.c（C 参数验证失败 → Python ValueError/RuntimeError）
+- [X] T030 创建 setup.py 构建脚本 src/python_bindings/setup.py（setuptools Extension, 指定 C 源文件和编译选项）
 
 ### Python 高层封装
 
-- [ ] T031 [P] 实现 Python 功能块类 python/plcopen/blocks.py（PID, FirstOrder 类，封装 C 扩展接口）
-- [ ] T032 [P] 添加 Python 类型提示 python/plcopen/blocks.py（使用 typing 模块，符合 PEP 484）
-- [ ] T033 [P] 实现参数警告机制 python/plcopen/blocks.py（参数超出范围时使用 warnings.warn()）
+- [X] T031 [P] 实现 Python 功能块类 python/plcopen/blocks.py（PID, FirstOrder 类，封装 C 扩展接口）
+- [X] T032 [P] 添加 Python 类型提示 python/plcopen/blocks.py（使用 typing 模块，符合 PEP 484）
+- [X] T033 [P] 实现参数警告机制 python/plcopen/blocks.py（参数超出范围时使用 warnings.warn()）
 
 ### 文档
 
-- [ ] T034 [P] 创建 API 使用示例 python/examples/basic_pid.py（创建 PID 实例，调用 compute 方法）
-- [ ] T035 [P] 添加 API 文档注释 python/plcopen/blocks.py（docstring，中文说明参数、返回值、异常）
+- [X] T034 [P] 创建 API 使用示例 python/examples/basic_pid.py（创建 PID 实例，调用 compute 方法）
+- [X] T035 [P] 添加 API 文档注释 python/plcopen/blocks.py（docstring，中文说明参数、返回值、异常）
 
 **检查点**: 用户故事 1 完成，可以在 Python 中调用 PID 和一阶惯性功能块
 
@@ -113,32 +113,32 @@
 
 ### 运行时主程序
 
-- [ ] T036 实现主程序入口 src/runtime/main.c（解析命令行参数 --config）
-- [ ] T037 实现运行时初始化 src/runtime/main.c（加载配置、初始化日志、启动 Python 解释器）
-- [ ] T038 实现控制循环主逻辑 src/runtime/main.c（调度器启动，周期性调用 Python step() 函数）
-- [ ] T039 实现优雅退出处理 src/runtime/main.c（捕获 SIGINT/SIGTERM，清理资源，关闭 Python 解释器）
-- [ ] T040 实现运行时上下文管理 src/runtime/context.c/h（RuntimeContext 单例，管理配置、解释器、功能块列表）
+- [X] T036 实现主程序入口 src/runtime/main.c（解析命令行参数 --config）
+- [X] T037 实现运行时初始化 src/runtime/main.c（加载配置、初始化日志、启动 Python 解释器）
+- [X] T038 实现控制循环主逻辑 src/runtime/main.c（调度器启动，周期性调用 Python step() 函数）
+- [X] T039 实现优雅退出处理 src/runtime/main.c（捕获 SIGINT/SIGTERM，清理资源，关闭 Python 解释器）
+- [X] T040 实现运行时上下文管理 src/runtime/context.c/h（RuntimeContext 单例，管理配置、解释器、功能块列表）
 
 ### 功能块扩展
 
-- [ ] T041 [P] 实现斜坡功能块 src/function_blocks/fb_ramp.c/h（以固定速率变化输出）
-- [ ] T042 [P] 实现限幅功能块 src/function_blocks/fb_limit.c/h（限制输入到 [min, max] 范围）
-- [ ] T043 [P] 实现斜坡和限幅 Python 绑定 src/python_bindings/py_ramp.c, py_limit.c
+- [X] T041 [P] 实现斜坡功能块 src/function_blocks/fb_ramp.c/h（以固定速率变化输出）
+- [X] T042 [P] 实现限幅功能块 src/function_blocks/fb_limit.c/h（限制输入到 [min, max] 范围）
+- [X] T043 [P] 实现斜坡和限幅 Python 绑定 src/python_bindings/py_ramp.c, py_limit.c
 
 ### 示例程序
 
-- [ ] T044 创建 PID 温度控制示例 python/examples/pid_temperature.py（包含 init() 和 step() 函数）
-- [ ] T045 实现温度物理模型模拟 python/examples/pid_temperature.py（加热效果、自然散热、测量噪声）
-- [ ] T046 添加示例配置文件 config/pid_temperature.yaml（周期时间 100ms，脚本路径指向示例）
-- [ ] T047 创建示例说明文档 docs/examples/pid_temperature.md（中文说明示例目的、参数调整、预期结果）
+- [X] T044 创建 PID 温度控制示例 python/examples/pid_temperature.py（包含 init() 和 step() 函数）
+- [X] T045 实现温度物理模型模拟 python/examples/pid_temperature.py（加热效果、自然散热、测量噪声）
+- [X] T046 添加示例配置文件 config/pid_temperature.yaml（周期时间 100ms，脚本路径指向示例）
+- [X] T047 创建示例说明文档 docs/examples/pid_temperature.md（中文说明示例目的、参数调整、预期结果）
 
 ### 脚本约定实现
 
-- [ ] T048 实现用户脚本 init() 函数调用 src/runtime/py_embed.c（运行时启动时调用一次）
-- [ ] T049 实现用户脚本 step() 函数周期调用 src/runtime/py_embed.c（每个控制周期调用）
+- [X] T048 实现用户脚本 init() 函数调用 src/runtime/py_embed.c（运行时启动时调用一次）
+- [X] T049 实现用户脚本 step() 函数周期调用 src/runtime/py_embed.c（每个控制周期调用）
 - [ ] T050 实现脚本超时检测 src/runtime/scheduler.c（step() 执行时间超过周期时间记录警告）
 
-**检查点**: 用户故事 2 完成，可以运行完整的 PID 温度控制示例
+**检查点**: 用户故事 2 完成，可以运行完整的 PID 温度控制示例 ✅
 
 ---
 

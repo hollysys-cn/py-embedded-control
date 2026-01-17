@@ -1,6 +1,6 @@
 # Minimal Makefile for Phase 4
 CC = gcc
-CFLAGS = -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -O2 -fPIC -Isrc
+CFLAGS = -std=c11 -Wall -Wextra -O2 -fPIC -Isrc
 PYTHON = python3
 PYTHON_INCLUDES = $(shell python3-config --includes)
 PYTHON_LIBS = $(shell python3-config --ldflags)
@@ -34,7 +34,7 @@ build:
 runtime:
 	@echo "Building runtime executable..."
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(PYTHON_INCLUDES) -o $(RUNTIME_TARGET) $(RUNTIME_SOURCES) -lpthread -lm -lpython3.13 $(PYTHON_LIBS)
+	$(CC) $(CFLAGS) $(PYTHON_INCLUDES) -o $(RUNTIME_TARGET) $(RUNTIME_SOURCES) $(PYTHON_LIBS) -lpthread -lm
 
 clean:
 	rm -rf $(BIN_DIR) build/ *.so __pycache__

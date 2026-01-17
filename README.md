@@ -2,14 +2,25 @@
 
 一个运行在 Linux 嵌入式环境的 PLCopen 标准功能块运行时系统。系统核心采用 C11 语言实现高性能的控制算法功能块（PID、一阶惯性等），通过 Python C Extension API 为 Python 3.8+ 提供绑定接口。
 
+## 🎯 项目状态
+
+**当前版本**: 0.1.0 (MVP Phase 4)
+**构建状态**: ✅ 通过（2026-01-17）
+**测试状态**: ✅ 所有功能块测试通过
+**实施进度**: Phase 4 完成（完整控制循环）
+
 ## 特性
 
-- ✅ **PLCopen 标准功能块**：PID 控制器、一阶惯性、斜坡、限幅等
+- ✅ **PLCopen 标准功能块**：PID 控制器、一阶惯性、斜率限制、限幅
 - ✅ **Python 脚本控制**：使用 Python 快速组合功能块实现控制逻辑
-- ✅ **高性能实时调度**：C11 实现，周期稳定性 95%（10ms-1000ms）
-- ✅ **远程调试支持**：通过 debugpy 协议远程调试 Python 脚本
-- ✅ **多架构支持**：x86_64 和 ARM (Cortex-A7+)
-- ✅ **Docker 开发环境**：支持 x86_64 开发和 ARM 功能测试
+- ✅ **高性能 C11 实现**：符合 IEC 61131-3 标准，优化的控制算法
+- ✅ **Python C Extension API**：零开销的 Python 绑定
+- ✅ **实时调度器**：纳秒级精度的周期调度（clock_nanosleep）
+- ✅ **运行时环境**：完整的主程序和控制循环
+- ✅ **Docker 开发环境**：开箱即用的构建和测试环境
+- ✅ **温度控制示例**：带物理模型的 PID 温度控制演示
+- 🚧 **远程调试支持**：debugpy 协议（Phase 5 计划中）
+- 🚧 **多架构支持**：x86_64 已验证，ARM 测试中
 
 ## 快速开始
 
@@ -17,16 +28,16 @@
 
 ```bash
 # 构建镜像
-make docker-build
+docker build -t plcopen-runtime:latest .
 
-# 启动开发容器（x86_64）
-make docker-dev
+# 测试 C 扩展模块
+docker run --rm plcopen-runtime:latest python3 -c "import plcopen_c; print('✓ 模块导入成功')"
 
-# 或启动 ARM 测试容器
-make docker-arm
+# 运行 PID 示例
+docker run --rm plcopen-runtime:latest python3 python/examples/basic_pid.py
 ```
 
-### 方式 2：原生安装
+### 方式 2：原生安装（需要 GCC 和 Python 开发环境）
 
 **前置要求**：
 - Linux (Ubuntu 20.04+ / Debian 10+)
@@ -113,9 +124,33 @@ debug:
 ### 3. 运行控制循环
 
 ```bash
-# 运行运行时（未实现，Phase 2 完成后可用）
-# ./bin/plcopen-runtime --config config/runtime.yaml
+# 方式 1：使用 Docker（推荐）
+docker build -t plcopen-runtime .
+docker run --rm plcopen-runtime
+
+# 方式 2：直接运行示例
+python3 python/examples/pid_temperature.py
+
+# 方式 3：使用运行时可执行文件
+bin/plcopen_runtime --config config/pid_temperature.yaml
 ```
+
+### 4. 查看示例输出
+
+PID 温度控制示例输出：
+
+```
+PID 温度控制初始化完成
+  目标温度: 25.0°C
+  初始温度: 20.0°C
+  PID 参数: Kp=3.0, Ki=0.2, Kd=0.5
+------------------------------------------------------------
+周期   10 | 温度: 21.07°C | 误差:  3.930°C | 控制输出:  12.3%
+周期   20 | 温度: 21.52°C | 误差:  3.476°C | 控制输出:  10.4%
+周期   30 | 温度: 21.72°C | 误差:  3.280°C | 控制输出:   9.6%
+```
+
+详细说明见 [PID 温度控制示例文档](docs/examples/pid_temperature.md)。
 
 ## 远程调试
 

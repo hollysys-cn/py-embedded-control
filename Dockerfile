@@ -29,18 +29,21 @@ WORKDIR /app
 
 # 复制项目文件
 COPY requirements.txt ./
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --no-cache-dir --break-system-packages setuptools wheel && \
+    python3 -m pip install --no-cache-dir --break-system-packages -r requirements.txt
 
 COPY . .
 
-# 构建 C 扩展
-RUN make build
+# 构建 C 扩展和运行时可执行文件
+RUN python3 setup.py build_ext --inplace && \
+    mkdir -p bin && \
+    make runtime
 
 # 设置 Python 路径
 ENV PYTHONPATH=/app/python:/app/src/python_bindings
 
-# 默认命令（Phase 2 实现后替换为实际运行时）
-CMD ["python3", "-c", "import plcopen; print(f'PLCopen Runtime v{plcopen.__version__}')"]
+# 默认命令：运行 PID 温度控制示例
+CMD ["bin/plcopen_runtime", "--config", "config/pid_temperature.yaml"]
 
 # 健康检查（可选，Phase 2 实现后启用）
 # HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \

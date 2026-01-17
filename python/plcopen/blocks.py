@@ -169,4 +169,138 @@ class FirstOrder:
         self._prev_output = 0.0
 
 
-__all__ = ['PID', 'FirstOrder']
+class Ramp:
+    """
+    斜率限制功能块
+
+    限制信号的变化速率，防止突变。
+
+    参数:
+        rising_rate: 上升速率（单位/秒），默认 1.0
+        falling_rate: 下降速率（单位/秒），默认 1.0
+
+    示例:
+        >>> ramp = Ramp(rising_rate=10.0, falling_rate=5.0)
+        >>> output = ramp.compute(input=100.0, dt=0.1)
+        >>> print(f"输出: {output:.2f}")
+    """
+
+    def __init__(self, rising_rate: float = 1.0, falling_rate: float = 1.0):
+        self._params = {
+            'rising_rate': rising_rate,
+            'falling_rate': falling_rate
+        }
+        self._output = 0.0
+        self._initialized = False
+
+    def compute(self, input: float, dt: float) -> float:
+        """
+        计算斜率限制后的输出
+
+        参数:
+            input: 输入信号
+            dt: 时间步长（秒）
+
+        返回:
+            float: 输出信号
+        """
+        if not self._initialized:
+            self._output = input
+            self._initialized = True
+            return self._output
+
+        error = input - self._output
+        max_change = (self._params['rising_rate'] if error > 0
+                     else self._params['falling_rate']) * dt
+
+        if abs(error) <= max_change:
+            self._output = input
+        else:
+            self._output += max_change if error > 0 else -max_change
+
+        return self._output
+
+    def set_params(self, rising_rate: Optional[float] = None,
+                   falling_rate: Optional[float] = None) -> None:
+        """
+        动态修改斜率参数
+
+        参数:
+            rising_rate: 上升速率（单位/秒）
+            falling_rate: 下降速率（单位/秒）
+        """
+        if rising_rate is not None:
+            self._params['rising_rate'] = rising_rate
+        if falling_rate is not None:
+            self._params['falling_rate'] = falling_rate
+
+    def get_params(self) -> Dict[str, float]:
+        """获取参数"""
+        return self._params.copy()
+
+    def reset(self, initial_value: float = 0.0) -> None:
+        """重置状态"""
+        self._output = initial_value
+        self._initialized = True
+
+
+class Limit:
+    """
+    限幅功能块
+
+    将信号限制在指定范围内。
+
+    参数:
+        min_value: 最小值，默认 0.0
+        max_value: 最大值，默认 100.0
+
+    示例:
+        >>> limit = Limit(min_value=0.0, max_value=100.0)
+        >>> output = limit.compute(input=150.0)
+        >>> print(f"输出: {output:.2f}")  # 100.0
+    """
+
+    def __init__(self, min_value: float = 0.0, max_value: float = 100.0):
+        if min_value > max_value:
+            raise ValueError("min_value must be <= max_value")
+        self._params = {
+            'min_value': min_value,
+            'max_value': max_value
+        }
+
+    def compute(self, input: float) -> float:
+        """
+        计算限幅后的输出
+
+        参数:
+            input: 输入信号
+
+        返回:
+            float: 输出信号
+        """
+        return max(self._params['min_value'],
+                  min(self._params['max_value'], input))
+
+    def set_params(self, min_value: Optional[float] = None,
+                   max_value: Optional[float] = None) -> None:
+        """
+        动态修改限幅参数
+
+        参数:
+            min_value: 最小值
+            max_value: 最大值
+        """
+        if min_value is not None:
+            self._params['min_value'] = min_value
+        if max_value is not None:
+            self._params['max_value'] = max_value
+
+        if self._params['min_value'] > self._params['max_value']:
+            raise ValueError("min_value must be <= max_value")
+
+    def get_params(self) -> Dict[str, float]:
+        """获取参数"""
+        return self._params.copy()
+
+
+__all__ = ['PID', 'FirstOrder', 'Ramp', 'Limit']

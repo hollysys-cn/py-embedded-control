@@ -9,10 +9,12 @@ __author__ = "Hollysys"
 __license__ = "MIT"
 
 # 导出功能块类
-from plcopen.blocks import PID, FirstOrder
+from plcopen.blocks import PID, FirstOrder, Ramp, Limit
 
 __all__ = [
     "__version__",
     "PID",
     "FirstOrder",
+    "Ramp",
+    "Limit",
 ]

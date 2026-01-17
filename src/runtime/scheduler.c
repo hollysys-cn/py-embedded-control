@@ -5,6 +5,7 @@
 
 #include "scheduler.h"
 #include "logger.h"
+#include <time.h>
 #include <string.h>
 #include <errno.h>
 

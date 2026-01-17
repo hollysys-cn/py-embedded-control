@@ -13,11 +13,15 @@ c_sources = [
     'src/python_bindings/plcopen_module.c',
     'src/python_bindings/py_pid.c',
     'src/python_bindings/py_first_order.c',
+    'src/python_bindings/py_ramp.c',
+    'src/python_bindings/py_limit.c',
 
     # 功能块实现
     'src/function_blocks/fb_common.c',
     'src/function_blocks/fb_pid.c',
     'src/function_blocks/fb_first_order.c',
+    'src/function_blocks/fb_ramp.c',
+    'src/function_blocks/fb_limit.c',
 
     # 运行时支持
     'src/runtime/logger.c',
@@ -26,6 +30,7 @@ c_sources = [
 # 编译选项
 extra_compile_args = [
     '-std=c11',
+    '-D_POSIX_C_SOURCE=200809L',
     '-Wall',
     '-Wextra',
     '-O2',
