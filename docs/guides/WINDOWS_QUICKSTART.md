@@ -1,69 +1,94 @@
 # Windows 环境快速开始指南
 
-本指南面向 Windows 用户，使用 Docker Desktop 快速启动和测试 PLCopen Python 运行时环境。
+本指南面向 Windows 用户，使用 **Git Bash + Docker Desktop** 快速启动和测试 PLCopen Python 运行时环境。
+
+> **⚠️ 重要变更**: 本项目已迁移到 Bash 脚本。请使用 **Git Bash** 或 **WSL** 而非 PowerShell。
+>
+> 📖 完整迁移指南: [MIGRATION_FROM_POWERSHELL.md](../../MIGRATION_FROM_POWERSHELL.md)
 
 ## 前提条件
 
-1. **Docker Desktop** - [下载安装](https://www.docker.com/products/docker-desktop)
-2. **Git** - [下载安装](https://git-scm.com/downloads)
-3. **VS Code**（可选，用于调试）- [下载安装](https://code.visualstudio.com/)
+### 必需软件
+
+1. **Git for Windows** (包含 Git Bash) - [下载安装](https://gitforwindows.org/)
+   - 安装时选择 "Git Bash Here" 选项
+   - 或者使用 **WSL**: `wsl --install` (PowerShell 管理员模式)
+
+2. **Docker Desktop** - [下载安装](https://www.docker.com/products/docker-desktop)
+   - 确保 Docker Desktop 正在运行
+
+3. **VS Code** (可选，用于调试) - [下载安装](https://code.visualstudio.com/)
+
+### 环境验证
+
+打开 **Git Bash** (右键项目文件夹 → "Git Bash Here") 并验证:
+
+```bash
+# 验证 Bash 版本
+bash --version  # 应显示 4.x 或更高
+
+# 验证 Docker
+docker --version
+docker-compose --version
+
+# 验证 Git
+git --version
+```
 
 ## 第一步：克隆项目
 
-```powershell
-# 打开 PowerShell
-cd $HOME\github
+```bash
+# 在 Git Bash 中执行
+cd /c/Users/$USER/github  # Windows C:\Users\YourName\github
 git clone https://github.com/hollysys-cn/py-embedded-control.git
 cd py-embedded-control
 ```
 
 ## 第二步：构建项目
 
-```powershell
-# 构建所有组件（运行时 + Python 扩展）
-.\build.ps1 -All
+```bash
+# 构建所有组件（Docker 镜像 + C 运行时 + Python 扩展）
+./build.sh
 ```
 
 **预期输出**：
 ```
 [INFO] 构建 Docker 镜像...
 [INFO] Docker 镜像构建成功
-[INFO] 构建运行时程序...
+[INFO] 在容器中构建项目...
+running build_ext
 Building runtime executable...
 gcc -std=c11 ... (编译命令)
-[INFO] 运行时构建成功
-[INFO] 构建 Python 扩展...
-[INFO] Python 扩展构建成功
-[INFO] 所有操作完成
+[INFO] 构建完成
 ```
 
-**构建时间**：首次构建约 2-5 分钟（需要下载 Docker 镜像）
+**构建时间**：首次构建约 3-5 分钟（需要下载 Docker 镜像）
 
-**如果遇到编译警告**：
-- `warning: 'strncpy' output may be truncated` - 已在最新版本修复，请更新代码
-- 其他警告通常可以忽略
+**清理构建**（可选）：
+```bash
+./build.sh --clean  # 清理后重新构建
+```
 
 **如果遇到错误**：
 - 确保 Docker Desktop 正在运行
 - 检查网络连接（需要下载基础镜像）
+- 确认在 **Git Bash** 中执行（不是 CMD 或 PowerShell）
 - 查看错误信息并参考[故障排除](#故障排除)
 
 ## 第三步：运行示例
 
 ### 3.1 运行 PID 温度控制示例
 
-```powershell
-.\run.ps1
+```bash
+./run.sh
 ```
 
 **第一次运行时的输出**：
 ```
-[INFO] Starting development container...
+[INFO] 启动开发容器...
 [+] Running 1/1
  ✔ Container plcopen-dev  Started
-[INFO] Starting runtime: config/pid_temperature.yaml
-[INFO] Press Ctrl+C to stop
-[INFO] Note: Python output will be shown in real-time
+[INFO] 使用配置文件启动应用: config/pid_temperature.yaml
 
 PID 温度控制初始化完成
   目标温度: 25.0°C
@@ -77,52 +102,81 @@ PID 温度控制初始化完成
 ```
 
 **观察**：
-- 首次运行会启动后台开发容器（plcopen-dev）
+- 首次运行会自动启动后台开发容器（plcopen-dev）
 - Python 脚本的 `print()` 输出实时显示
 - 温度值逐渐上升，接近目标温度 25°C
 - PID 控制器自动调整输出功率
 - 每 10 个周期（1秒）输出一次状态
 
-**停止程序**：按 `Ctrl+C`（现在可以正常终止了！）
+**停止程序**：按 `Ctrl+C`
 
 **重要说明**：
-- 开发容器会在后台保持运行，下次运行 `.\run.ps1` 时会更快
-- 如需停止容器：`docker-compose down`
-- 查看容器状态：`docker ps`
+- 开发容器会在后台保持运行，下次运行更快
+- 停止容器: `docker-compose down`
+- 查看容器状态: `docker ps`
 - 日志文件位于容器内的 `logs/pid_temperature.log`
-- **如果看不到 Python 输出**：请确保已重新构建项目（应用了输出刷新修复）：`.\build.ps1 -Runtime`
 
-### 3.2 运行级联控制示例
+### 3.2 使用自定义配置
 
-```powershell
-.\run.ps1 -Config config/cascade_control.yaml
+```bash
+./run.sh config/custom.yaml  # 指定配置文件
 ```
 
-## 第四步：调试功能（可选）
+### 3.3 进入容器 Shell
 
-> **快速上手**：查看 [调试快速指南](DEBUG_QUICKSTART.md) 获取一分钟调试教程
+```bash
+./run.sh --shell  # 进入交互式 Shell
+```
 
-### 4.1 启动调试模式
+在容器中可以:
+```bash
+# 查看文件结构
+ls -la
 
-```powershell
-.\run.ps1 -Debug
+# 手动运行示例
+python3 python/examples/pid_temperature.py
+
+# 运行其他命令
+make clean
+```
+
+## 第四步：运行测试
+
+```bash
+# 运行所有测试
+./test.sh
+
+# 仅静态分析
+./test.sh --lint
+
+# 仅单元测试
+./test.sh --unit
+```
+
+## 第五步：调试功能（可选）
+
+> **快速上手**：查看 [调试快速指南](REMOTE_DEBUG_QUICKSTART.md) 获取详细教程
+
+### 5.1 启动调试模式
+
+```bash
+# 进入容器 Shell
+./run.sh --shell
+
+# 在容器中启动 debugpy
+python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client /workspace/python/examples/pid_temperature.py
 ```
 
 **预期输出**：
 ```
-[INFO] Starting development container...
-[+] Running 1/1
- ✔ Container plcopen-dev  Started
-[INFO] 使用调试配置: config/pid_temperature_debug.yaml
-[INFO] 调试端口: 5678
+[INFO] 进入容器 Shell...
+root@plcopen-dev:/workspace# python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client /workspace/python/examples/pid_temperature.py
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   调试模式已启动
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[INFO] 启动运行时...
-
-[INFO] debugpy 服务器已启动，等待调试器连接...
+debugpy 服务器已启动，等待调试器连接...
 
 下一步：在 VS Code 中附加调试器
 

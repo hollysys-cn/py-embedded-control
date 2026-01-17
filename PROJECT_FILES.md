@@ -31,16 +31,23 @@
 
 ### 脚本工具
 
-| 文件 | 说明 |
-|------|------|
-| `start-debug.ps1` | Windows 一键启动调试脚本（常用）⭐ |
-| `start-debug.sh` | Linux/macOS 一键启动调试脚本（常用）⭐ |
-| `start-debug.bat` | Windows 批处理包装器（绕过执行策略）⭐ |
-| `build.ps1` | Windows 构建脚本 |
-| `build.bat` | Windows 批处理包装器（绕过执行策略）|
-| `run.ps1` | Windows 运行脚本 |
-| `run.bat` | Windows 批处理包装器（绕过执行策略）|
-| `scripts/` | 辅助脚本目录（版权检查、验证、容器调试等）|
+> **⚠️ 已迁移到 Bash**: 项目现使用统一的 Bash 脚本。查看 [MIGRATION_FROM_POWERSHELL.md](MIGRATION_FROM_POWERSHELL.md)
+
+| 文件 | 说明 | 状态 |
+|------|------|------|
+| `build.sh` | 跨平台构建脚本（推荐）⭐ | ✅ 活跃 |
+| `run.sh` | 跨平台运行脚本（推荐）⭐ | ✅ 活跃 |
+| `test.sh` | 跨平台测试脚本（推荐）⭐ | ✅ 活跃 |
+| `MIGRATION_FROM_POWERSHELL.md` | PowerShell 迁移指南 | ✅ 活跃 |
+| `start-debug.sh` | Linux/macOS 一键启动调试脚本 | ✅ 保留 |
+| `start-debug.ps1` | Windows 一键启动调试脚本 | ⚠️ 待弃用 |
+| `start-debug.bat` | Windows 批处理包装器 | ⚠️ 待弃用 |
+| `build.ps1` | Windows 构建脚本 | ⚠️ 待弃用 |
+| `build.bat` | Windows 批处理包装器 | ⚠️ 待弃用 |
+| `run.ps1` | Windows 运行脚本 | ⚠️ 待弃用 |
+| `run.bat` | Windows 批处理包装器 | ⚠️ 待弃用 |
+| `debug*.ps1` | Windows 调试脚本 | ⚠️ 待移除 |
+| `scripts/` | 辅助脚本目录（版权检查、验证等）| ✅ 活跃 |
 
 ### 配置目录
 
@@ -88,7 +95,30 @@
 
 ## 🚀 常用操作
 
-### 快速开始
+### 快速开始 (Bash)
+
+```bash
+# 构建项目
+./build.sh
+
+# 运行示例
+./run.sh
+
+# 运行测试
+./test.sh
+
+# 进入容器 Shell
+./run.sh --shell
+
+# 查看帮助
+./build.sh --help
+```
+
+### 快速开始 (旧版 PowerShell - 已弃用)
+
+<details>
+<summary>点击展开旧命令</summary>
+
 ```bash
 # 查看主文档
 cat README.md

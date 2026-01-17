@@ -1,5 +1,9 @@
 # 容器调试示例
 
+> ⚠️ **历史文档**: 本文档中的命令基于旧的 PowerShell 脚本。  
+> **Bash 等效命令**: 使用 `./run.sh --shell` 代替 `debug-container.ps1`。  
+> 详见 [MIGRATION_FROM_POWERSHELL.md](../../MIGRATION_FROM_POWERSHELL.md)
+
 这里提供几个实际的调试示例，帮助你快速上手。
 
 ## 示例 1: 调试 Python PID 控制器

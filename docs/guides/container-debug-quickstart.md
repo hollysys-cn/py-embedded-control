@@ -1,5 +1,9 @@
 # 容器调试快速开始
 
+> ⚠️ **历史文档**: 本文档使用旧的 PowerShell 脚本。  
+> **新的调试方法**: 使用 `./run.sh --shell` 进入容器，然后手动启动 debugpy。  
+> 详见 [WINDOWS_QUICKSTART.md](WINDOWS_QUICKSTART.md)
+
 快速启动容器并使用 VS Code 进行远程调试。
 
 ## 🚀 三步开始

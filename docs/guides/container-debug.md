@@ -1,5 +1,9 @@
 # 容器远程调试指南
 
+> ⚠️ **历史文档**: 本文档描述了基于 PowerShell 的调试流程。  
+> 项目已迁移到 Bash 脚本，请使用 `./run.sh --shell` 进入容器调试。  
+> 详见 [MIGRATION_FROM_POWERSHELL.md](../../MIGRATION_FROM_POWERSHELL.md)
+
 本文档介绍如何在 Docker 容器中运行 PLCopen Python Runtime 并使用 VS Code 进行远程调试。
 
 ## 📋 目录
