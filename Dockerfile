@@ -22,6 +22,12 @@ RUN apt-get update && \
         python3-venv \
         cppcheck \
         git \
+        gdb \
+        strace \
+        valgrind \
+        vim \
+        procps \
+        net-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # 设置工作目录
@@ -39,8 +45,10 @@ RUN python3 setup.py build_ext --inplace && \
     mkdir -p bin && \
     make runtime
 
-# 设置 Python 路径
-ENV PYTHONPATH=/app/python:/app/src/python_bindings
+# 设置 Python 路径和调试环境变量
+ENV PYTHONPATH=/app/python:/app/src/python_bindings \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
 # 默认命令：运行 PID 温度控制示例
 CMD ["bin/plcopen_runtime", "--config", "config/pid_temperature.yaml"]

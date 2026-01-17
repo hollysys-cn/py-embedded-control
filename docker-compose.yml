@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # x86_64 开发环境
   dev:
@@ -13,9 +11,16 @@ services:
       - .:/workspace
     working_dir: /workspace
     ports:
-      - "5678:5678"  # debugpy 调试端口
+      - "5678:5678"  # debugpy Python 调试端口
+      - "9000:9000"  # gdbserver C/C++ 调试端口（可选）
     environment:
       - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    # 启用特权模式以支持 gdb/valgrind 等调试工具
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
     command: tail -f /dev/null  # 保持容器运行
     networks:
       - plcopen-net
@@ -33,8 +38,14 @@ services:
     working_dir: /workspace
     ports:
       - "5679:5678"  # debugpy 调试端口（主机端口 5679）
+      - "9001:9000"  # gdbserver 调试端口（主机端口 9001）
     environment:
       - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
     command: tail -f /dev/null  # 保持容器运行
     networks:
       - plcopen-net

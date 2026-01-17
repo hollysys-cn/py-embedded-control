@@ -1,0 +1,83 @@
+{
+  "name": "PLCopen Python Runtime Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  
+  // 容器启动后执行的命令
+  "postCreateCommand": "python3 -m pip install --break-system-packages -e . && python3 setup.py build_ext --inplace",
+  
+  // VS Code 设置
+  "customizations": {
+    "vscode": {
+      // 推荐扩展
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "davidanson.vscode-markdownlint"
+      ],
+      
+      // 容器内的编辑器设置
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.analysis.typeCheckingMode": "basic",
+        "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+        "C_Cpp.default.cStandard": "c11",
+        "C_Cpp.default.cppStandard": "c++17",
+        "C_Cpp.default.includePath": [
+          "${workspaceFolder}/src/**",
+          "/usr/include/python3.11"
+        ],
+        "files.watcherExclude": {
+          "**/build/**": true,
+          "**/__pycache__/**": true,
+          "**/.pytest_cache/**": true
+        }
+      }
+    }
+  },
+  
+  // 转发端口
+  "forwardPorts": [5678, 9000],
+  "portsAttributes": {
+    "5678": {
+      "label": "Python Debug (debugpy)",
+      "onAutoForward": "notify"
+    },
+    "9000": {
+      "label": "C/C++ Debug (gdbserver)",
+      "onAutoForward": "silent"
+    }
+  },
+  
+  // 容器特性
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  
+  // 运行参数
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  
+  // 挂载
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  
+  // 远程用户
+  "remoteUser": "root"
+}

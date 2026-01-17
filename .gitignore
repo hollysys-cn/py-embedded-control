@@ -306,3 +306,16 @@ runtime.log
 config/runtime.yaml
 !config/*.example
 !config/*.yaml.example
+
+# Debug logs and artifacts
+*.log
+*.log.*
+debugpy*.log
+.debugpy/
+
+# Docker volumes and temp files
+.docker-volumes/
+docker-compose.override.yml
+
+# Dev container temp files
+.devcontainer/.env

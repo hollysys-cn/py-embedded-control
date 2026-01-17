@@ -36,6 +36,8 @@
 
 ## 快速开始
 
+> 💡 **想要调试？** 查看 [容器远程调试指南](DEBUGGING.md) 了解如何在 Docker 容器中使用 VS Code 进行远程调试。
+
 ### 方式 1：Docker（推荐，支持 Windows/Mac/Linux）
 
 #### Windows 环境
@@ -274,6 +276,7 @@ make clean
 完整文档请参考：
 
 - **[用户手册](docs/user_guide.md)** - 安装、配置、使用指南
+- **[容器远程调试指南](docs/container-debug.md)** - Docker 容器中使用 VS Code 进行远程调试
 - **[API 参考](docs/api_reference.md)** - 完整 API 文档
 - **[常见问题](docs/faq.md)** - 常见问题和解决方案
 - **[贡献指南](docs/contributing.md)** - 如何参与开发
