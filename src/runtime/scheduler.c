@@ -63,7 +63,7 @@ int scheduler_set_cpu_affinity(int cpu_core) {
     LOG_INFO_MSG("已绑定到 CPU 核心 %d", cpu_core);
     return 0;
 #else
-    LOG_WARN_MSG("当前平台不支持 CPU 亲和性设置");
+    LOG_WARNING_MSG("当前平台不支持 CPU 亲和性设置");
     return -1;
 #endif
 }

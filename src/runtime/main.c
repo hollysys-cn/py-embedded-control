@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
                               ctx->config.debug_timeout) == 0) {
             // 启动 debugpy 服务器（失败不影响运行）
             if (debug_server_start(&debug_session, &ctx->py_context) != 0) {
-                LOG_WARN_MSG("调试服务器启动失败，程序继续运行");
+                LOG_WARNING_MSG("调试服务器启动失败，程序继续运行");
             }
         }
     } else {
@@ -143,16 +143,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // 输出最终统计
-    const SchedulerStats* stats = scheduler_get_stats(&scheduler);
-    LOG_INFO_MSG("运行时停止：总周期=%llu, 平均周期=%.2f ms, 超时次数=%llu",
-                 (unsigned long long)stats->cycle_count,
-
     // 停止调试服务器（如果启用）
     if (ctx->config.debug_enabled) {
         debug_server_stop(&debug_session);
     }
 
+    // 输出最终统计
+    const SchedulerStats* stats = scheduler_get_stats(&scheduler);
+    LOG_INFO_MSG("运行时停止：总周期=%llu, 平均周期=%.2f ms, 超时次数=%llu",
+                 (unsigned long long)stats->cycle_count,
                  stats->avg_cycle_time_ms,
                  (unsigned long long)stats->timeout_count);
 

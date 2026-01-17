@@ -91,7 +91,7 @@ void debug_server_check_status(DebugSession* session) {
 
     // 检查连接超时
     if (state == DEBUG_STATE_CONNECTING && debug_session_is_timeout(session)) {
-        LOG_WARN_MSG("调试连接超时（%d 秒），控制逻辑继续运行", session->timeout_sec);
+        LOG_WARNING_MSG("调试连接超时（%d 秒），控制逻辑继续运行", session->timeout_sec);
         debug_session_set_error(session, "连接超时");
     }
 
@@ -110,6 +110,6 @@ void debug_server_handle_error(DebugSession* session, const char* error_msg) {
     debug_session_set_error(session, error_msg);
 
     // 强调：调试错误不影响控制逻辑
-    LOG_WARN_MSG("调试功能不可用，但控制逻辑将继续运行");
+    LOG_WARNING_MSG("调试功能不可用，但控制逻辑将继续运行");
     LOG_INFO_MSG("提示：若需要调试功能，请确保已安装 debugpy: pip install debugpy");
 }

@@ -89,7 +89,7 @@ int debug_session_is_timeout(const DebugSession* session) {
     time_t elapsed = current_time - session->connect_start_time;
 
     if (elapsed >= session->timeout_sec) {
-        LOG_WARN_MSG("调试连接超时（%ld 秒 >= %d 秒）", elapsed, session->timeout_sec);
+        LOG_WARNING_MSG("调试连接超时（%ld 秒 >= %d 秒）", elapsed, session->timeout_sec);
         return 1;
     }
 
