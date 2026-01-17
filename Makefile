@@ -23,7 +23,7 @@ src/function_blocks/fb_limit.c
 
 RUNTIME_TARGET = $(BIN_DIR)/plcopen_runtime
 
-.PHONY: all build runtime clean
+.PHONY: all build runtime clean lint test
 
 all: build runtime
 
@@ -35,6 +35,29 @@ runtime:
 	@echo "Building runtime executable..."
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $(PYTHON_INCLUDES) -o $(RUNTIME_TARGET) $(RUNTIME_SOURCES) -lpthread -lm -lpython3.13 $(PYTHON_LIBS)
+
+lint:
+	@echo "Running Python code quality checks..."
+	@echo "==> flake8"
+	-$(PYTHON) -m flake8 python/ setup.py
+	@echo "==> black (check only)"
+	-$(PYTHON) -m black --check --line-length=88 python/ setup.py
+	@echo "==> pylint"
+	-$(PYTHON) -m pylint --max-line-length=88 python/plcopen/ python/examples/*.py setup.py
+	@echo ""
+	@echo "Running C code quality checks..."
+	@echo "==> cppcheck (if available)"
+	-which cppcheck > /dev/null && cppcheck --enable=all --std=c11 \
+		--suppress=missingIncludeSystem --suppress=unusedFunction src/ || \
+		echo "cppcheck not found, skipping C static analysis"
+
+format:
+	@echo "Auto-formatting Python code with black..."
+	$(PYTHON) -m black --line-length=88 python/ setup.py
+
+test:
+	@echo "Running tests..."
+	$(PYTHON) -m pytest python/tests/ -v
 
 clean:
 	rm -rf $(BIN_DIR) build/ *.so __pycache__

@@ -5,7 +5,6 @@ PLCopen 功能块高层 Python 封装
 """
 
 from typing import Dict, Optional
-import warnings
 
 # 导入 C 扩展模块（Phase 3 完成后取消注释）
 # import plcopen_c
@@ -30,21 +29,24 @@ class PID:
         >>> print(f"控制输出: {control:.2f}")
     """
 
-    def __init__(self, Kp: float = 1.0, Ki: float = 0.0, Kd: float = 0.0,
-                 output_min: float = -1e6, output_max: float = 1e6):
+    def __init__(
+        self,
+        Kp: float = 1.0,
+        Ki: float = 0.0,
+        Kd: float = 0.0,
+        output_min: float = -1e6,
+        output_max: float = 1e6,
+    ):
         # self._pid = plcopen_c.PID(Kp, Ki, Kd, output_min, output_max)
         # 临时占位：Phase 3 完成后使用真实 C 扩展
         self._params = {
-            'Kp': Kp,
-            'Ki': Ki,
-            'Kd': Kd,
-            'output_min': output_min,
-            'output_max': output_max
+            "Kp": Kp,
+            "Ki": Ki,
+            "Kd": Kd,
+            "output_min": output_min,
+            "output_max": output_max,
         }
-        self._state = {
-            'integral': 0.0,
-            'prev_error': 0.0
-        }
+        self._state = {"integral": 0.0, "prev_error": 0.0}
 
     def compute(self, SP: float, PV: float) -> float:
         """
@@ -60,11 +62,14 @@ class PID:
         # return self._pid.compute(SP, PV)
         # 临时占位：简化实现
         error = SP - PV
-        return self._params['Kp'] * error
+        return self._params["Kp"] * error
 
-    def set_params(self, Kp: Optional[float] = None,
-                   Ki: Optional[float] = None,
-                   Kd: Optional[float] = None) -> None:
+    def set_params(
+        self,
+        Kp: Optional[float] = None,
+        Ki: Optional[float] = None,
+        Kd: Optional[float] = None,
+    ) -> None:
         """
         运行时动态修改 PID 参数
 
@@ -73,11 +78,11 @@ class PID:
         """
         # self._pid.set_params(Kp=Kp, Ki=Ki, Kd=Kd)
         if Kp is not None:
-            self._params['Kp'] = Kp
+            self._params["Kp"] = Kp
         if Ki is not None:
-            self._params['Ki'] = Ki
+            self._params["Ki"] = Ki
         if Kd is not None:
-            self._params['Kd'] = Kd
+            self._params["Kd"] = Kd
 
     def get_params(self) -> Dict[str, float]:
         """
@@ -102,7 +107,7 @@ class PID:
     def reset(self) -> None:
         """重置 PID 内部状态（积分清零）"""
         # self._pid.reset()
-        self._state = {'integral': 0.0, 'prev_error': 0.0}
+        self._state = {"integral": 0.0, "prev_error": 0.0}
 
 
 class FirstOrder:
@@ -123,7 +128,7 @@ class FirstOrder:
     def __init__(self, T: float = 1.0):
         # self._fo = plcopen_c.FirstOrder(T)
         # 临时占位
-        self._params = {'T': T}
+        self._params = {"T": T}
         self._prev_output = 0.0
 
     def compute(self, input: float) -> float:
@@ -151,7 +156,7 @@ class FirstOrder:
             T: 时间常数（秒）
         """
         # self._fo.set_time_constant(T)
-        self._params['T'] = T
+        self._params["T"] = T
 
     def get_params(self) -> Dict[str, float]:
         """
@@ -186,10 +191,7 @@ class Ramp:
     """
 
     def __init__(self, rising_rate: float = 1.0, falling_rate: float = 1.0):
-        self._params = {
-            'rising_rate': rising_rate,
-            'falling_rate': falling_rate
-        }
+        self._params = {"rising_rate": rising_rate, "falling_rate": falling_rate}
         self._output = 0.0
         self._initialized = False
 
@@ -210,8 +212,9 @@ class Ramp:
             return self._output
 
         error = input - self._output
-        max_change = (self._params['rising_rate'] if error > 0
-                     else self._params['falling_rate']) * dt
+        max_change = (
+            self._params["rising_rate"] if error > 0 else self._params["falling_rate"]
+        ) * dt
 
         if abs(error) <= max_change:
             self._output = input
@@ -220,8 +223,9 @@ class Ramp:
 
         return self._output
 
-    def set_params(self, rising_rate: Optional[float] = None,
-                   falling_rate: Optional[float] = None) -> None:
+    def set_params(
+        self, rising_rate: Optional[float] = None, falling_rate: Optional[float] = None
+    ) -> None:
         """
         动态修改斜率参数
 
@@ -230,9 +234,9 @@ class Ramp:
             falling_rate: 下降速率（单位/秒）
         """
         if rising_rate is not None:
-            self._params['rising_rate'] = rising_rate
+            self._params["rising_rate"] = rising_rate
         if falling_rate is not None:
-            self._params['falling_rate'] = falling_rate
+            self._params["falling_rate"] = falling_rate
 
     def get_params(self) -> Dict[str, float]:
         """获取参数"""
@@ -263,10 +267,7 @@ class Limit:
     def __init__(self, min_value: float = 0.0, max_value: float = 100.0):
         if min_value > max_value:
             raise ValueError("min_value must be <= max_value")
-        self._params = {
-            'min_value': min_value,
-            'max_value': max_value
-        }
+        self._params = {"min_value": min_value, "max_value": max_value}
 
     def compute(self, input: float) -> float:
         """
@@ -278,11 +279,11 @@ class Limit:
         返回:
             float: 输出信号
         """
-        return max(self._params['min_value'],
-                  min(self._params['max_value'], input))
+        return max(self._params["min_value"], min(self._params["max_value"], input))
 
-    def set_params(self, min_value: Optional[float] = None,
-                   max_value: Optional[float] = None) -> None:
+    def set_params(
+        self, min_value: Optional[float] = None, max_value: Optional[float] = None
+    ) -> None:
         """
         动态修改限幅参数
 
@@ -291,11 +292,11 @@ class Limit:
             max_value: 最大值
         """
         if min_value is not None:
-            self._params['min_value'] = min_value
+            self._params["min_value"] = min_value
         if max_value is not None:
-            self._params['max_value'] = max_value
+            self._params["max_value"] = max_value
 
-        if self._params['min_value'] > self._params['max_value']:
+        if self._params["min_value"] > self._params["max_value"]:
             raise ValueError("min_value must be <= max_value")
 
     def get_params(self) -> Dict[str, float]:
@@ -303,4 +304,4 @@ class Limit:
         return self._params.copy()
 
 
-__all__ = ['PID', 'FirstOrder', 'Ramp', 'Limit']
+__all__ = ["PID", "FirstOrder", "Ramp", "Limit"]

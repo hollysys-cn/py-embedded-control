@@ -5,10 +5,12 @@ Ramp 和 Limit 功能块示例
 """
 
 import sys
-sys.path.insert(0, '.')
-sys.path.insert(0, './python')
 
 from plcopen import Ramp, Limit
+
+sys.path.insert(0, ".")
+sys.path.insert(0, "./python")
+
 
 def main():
     print("=" * 60)
@@ -20,7 +22,7 @@ def main():
     print("-" * 60)
 
     ramp = Ramp(rising_rate=10.0, falling_rate=5.0)
-    print(f"创建 Ramp: rising_rate=10.0 单位/秒, falling_rate=5.0 单位/秒")
+    print("创建 Ramp: rising_rate=10.0 单位/秒, falling_rate=5.0 单位/秒")
 
     # 模拟突变输入信号
     test_input = 100.0
@@ -35,7 +37,9 @@ def main():
         time = i * dt
         output = ramp.compute(test_input, dt)
         rate = (output - (ramp._output if i > 0 else 0)) / dt if i > 0 else 0
-        print(f"{time:6.2f}  | {test_input:5.1f} | {output:5.1f} | {rate:+6.2f} 单位/秒")
+        print(
+            f"{time:6.2f}  | {test_input:5.1f} | {output:5.1f} | {rate:+6.2f} 单位/秒"
+        )
 
         # 第 8 个周期后，输入变为 0（下降）
         if i == 7:
@@ -49,7 +53,7 @@ def main():
     print("-" * 60)
 
     limit = Limit(min_value=0.0, max_value=100.0)
-    print(f"创建 Limit: min=0.0, max=100.0")
+    print("创建 Limit: min=0.0, max=100.0")
 
     test_inputs = [-50, -10, 0, 25, 50, 75, 100, 120, 150]
 
@@ -57,7 +61,9 @@ def main():
     print("-" * 60)
     for value in test_inputs:
         output = limit.compute(value)
-        status = "限制在下限" if value < 0 else ("限制在上限" if value > 100 else "正常范围")
+        status = (
+            "限制在下限" if value < 0 else ("限制在上限" if value > 100 else "正常范围")
+        )
         print(f"{value:4.0f} | {output:5.1f} | {status}")
 
     # 3. 组合示例：Ramp + Limit
@@ -87,6 +93,7 @@ def main():
     print("\n" + "=" * 60)
     print("示例完成")
     print("=" * 60)
+
 
 if __name__ == "__main__":
     main()

@@ -5,10 +5,11 @@
 """
 
 import sys
-sys.path.insert(0, '.')
-sys.path.insert(0, './python')
 
 from plcopen import PID
+
+sys.path.insert(0, ".")
+sys.path.insert(0, "./python")
 
 
 def main():

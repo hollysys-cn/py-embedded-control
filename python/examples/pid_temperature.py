@@ -10,22 +10,23 @@ PID 温度控制示例
 """
 
 import sys
-sys.path.insert(0, '.')
-sys.path.insert(0, './python')
+import random
 
 from plcopen import PID
-import random
+
+sys.path.insert(0, ".")
+sys.path.insert(0, "./python")
 
 # 全局变量
 pid = None
 temperature = 20.0  # 当前温度（°C）
-setpoint = 25.0     # 目标温度（°C）
+setpoint = 25.0  # 目标温度（°C）
 step_count = 0
 
 
 def init():
     """初始化函数，运行时启动时调用一次"""
-    global pid, temperature, setpoint
+    global pid
 
     # 创建 PID 控制器
     # Kp=3.0: 比例系数（较强的比例作用）
@@ -34,12 +35,14 @@ def init():
     # output_min=0, output_max=100: 控制输出 0-100%
     pid = PID(Kp=3.0, Ki=0.2, Kd=0.5, output_min=0, output_max=100)
 
-    print(f"PID 温度控制初始化完成")
+    print("PID 温度控制初始化完成")
     print(f"  目标温度: {setpoint}°C")
     print(f"  初始温度: {temperature}°C")
-    print(f"  PID 参数: Kp={pid.get_params()['Kp']}, "
-          f"Ki={pid.get_params()['Ki']}, "
-          f"Kd={pid.get_params()['Kd']}")
+    print(
+        f"  PID 参数: Kp={pid.get_params()['Kp']}, "
+        f"Ki={pid.get_params()['Ki']}, "
+        f"Kd={pid.get_params()['Kd']}"
+    )
     print("-" * 60)
 
 
@@ -69,10 +72,12 @@ def step():
     # 每 10 个周期输出一次状态
     if step_count % 10 == 0:
         error = setpoint - temperature
-        print(f"周期 {step_count:4d} | "
-              f"温度: {temperature:5.2f}°C | "
-              f"误差: {error:6.3f}°C | "
-              f"控制输出: {control_output:5.1f}%")
+        print(
+            f"周期 {step_count:4d} | "
+            f"温度: {temperature:5.2f}°C | "
+            f"误差: {error:6.3f}°C | "
+            f"控制输出: {control_output:5.1f}%"
+        )
 
     # 每 100 个周期输出分隔线
     if step_count % 100 == 0:
