@@ -3,11 +3,14 @@
  * @brief 周期调度器实现
  */
 
+#define _GNU_SOURCE  // 为 CPU_SET 等宏定义
 #include "scheduler.h"
 #include "logger.h"
 #include <time.h>
 #include <string.h>
 #include <errno.h>
+#include <sched.h>
+#include <unistd.h>
 
 // 内部函数：计算时间差（毫秒）
 static double timespec_diff_ms(const struct timespec* end, const struct timespec* start);
@@ -37,6 +40,32 @@ int scheduler_init(SchedulerContext* ctx, int cycle_period_ms, int timeout_thres
                  cycle_period_ms, timeout_threshold_percent);
 
     return 0;
+}
+
+int scheduler_set_cpu_affinity(int cpu_core) {
+    if (cpu_core < 0) {
+        LOG_DEBUG_MSG("CPU 亲和性未设置（cpu_core=%d）", cpu_core);
+        return 0;  // 不绑定
+    }
+
+#ifdef __linux__
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(cpu_core, &cpuset);
+
+    pid_t tid = gettid();  // 获取当前线程 ID
+
+    if (sched_setaffinity(tid, sizeof(cpu_set_t), &cpuset) != 0) {
+        LOG_ERROR_MSG("设置 CPU 亲和性失败（CPU %d）：%s", cpu_core, strerror(errno));
+        return -1;
+    }
+
+    LOG_INFO_MSG("已绑定到 CPU 核心 %d", cpu_core);
+    return 0;
+#else
+    LOG_WARN_MSG("当前平台不支持 CPU 亲和性设置");
+    return -1;
+#endif
 }
 
 int scheduler_wait_next_cycle(SchedulerContext* ctx) {

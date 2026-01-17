@@ -14,6 +14,8 @@
 #include "scheduler.h"
 #include "logger.h"
 #include "py_embed.h"
+#include "debug_server.h"
+#include "debug_session.h"
 
 // 全局信号标志
 static volatile sig_atomic_t g_shutdown_requested = 0;
@@ -70,6 +72,22 @@ int main(int argc, char* argv[]) {
 
     RuntimeContext* ctx = runtime_context_get();
 
+    // 启动调试服务器（如果启用）
+    DebugSession debug_session;
+    if (ctx->config.debug_enabled) {
+        if (debug_session_init(&debug_session,
+                              ctx->config.debug_host,
+                              ctx->config.debug_port,
+                              ctx->config.debug_timeout) == 0) {
+            // 启动 debugpy 服务器（失败不影响运行）
+            if (debug_server_start(&debug_session, &ctx->py_context) != 0) {
+                LOG_WARN_MSG("调试服务器启动失败，程序继续运行");
+            }
+        }
+    } else {
+        LOG_DEBUG_MSG("调试功能未启用");
+    }
+
     // 调用用户脚本的 init() 函数
     if (py_embed_call_init(&ctx->py_context) != 0) {
         LOG_ERROR_MSG("init() 函数调用失败");
@@ -87,6 +105,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // 设置 CPU 亲和性（如果配置了）
+    if (ctx->config.cpu_affinity >= 0) {
+        scheduler_set_cpu_affinity(ctx->config.cpu_affinity);
+    }
+
     ctx->running = 1;
     LOG_INFO_MSG("运行时启动：周期=%d ms", ctx->config.cycle_period_ms);
 
@@ -96,6 +119,11 @@ int main(int argc, char* argv[]) {
 
         // 记录周期开始时间
         scheduler_cycle_start(&scheduler, &cycle_start);
+
+        // 检查调试服务器状态（如果启用）
+        if (ctx->config.debug_enabled) {
+            debug_server_check_status(&debug_session);
+        }
 
         // 调用用户脚本的 step() 函数
         if (py_embed_call_step(&ctx->py_context) != 0) {
@@ -119,6 +147,12 @@ int main(int argc, char* argv[]) {
     const SchedulerStats* stats = scheduler_get_stats(&scheduler);
     LOG_INFO_MSG("运行时停止：总周期=%llu, 平均周期=%.2f ms, 超时次数=%llu",
                  (unsigned long long)stats->cycle_count,
+
+    // 停止调试服务器（如果启用）
+    if (ctx->config.debug_enabled) {
+        debug_server_stop(&debug_session);
+    }
+
                  stats->avg_cycle_time_ms,
                  (unsigned long long)stats->timeout_count);
 

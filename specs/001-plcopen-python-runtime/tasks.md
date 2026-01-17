@@ -150,21 +150,21 @@
 
 ### 调试服务器
 
-- [ ] T051 实现 debugpy 服务器启动 src/runtime/debug_server.c/h（调用 Python debugpy.listen()）
-- [ ] T052 实现调试配置解析 src/runtime/config_loader.c（从配置文件读取 debug.enabled, debug.host, debug.port）
-- [ ] T053 实现调试会话状态管理 src/runtime/debug_session.c/h（DebugSession 结构体，状态机：IDLE → CONNECTING → CONNECTED → ERROR）
-- [ ] T054 实现调试连接超时处理 src/runtime/debug_server.c（连接超时 5 秒，记录警告）
-- [ ] T055 实现调试独立性保证 src/runtime/debug_server.c（调试会话中断时控制逻辑继续运行）
+- [X] T051 实现 debugpy 服务器启动 src/runtime/debug_server.c/h（调用 Python debugpy.listen()）
+- [X] T052 实现调试配置解析 src/runtime/config_loader.c（从配置文件读取 debug.enabled, debug.host, debug.port）
+- [X] T053 实现调试会话状态管理 src/runtime/debug_session.c/h（DebugSession 结构体，状态机：IDLE → CONNECTING → CONNECTED → ERROR）
+- [X] T054 实现调试连接超时处理 src/runtime/debug_server.c（连接超时 5 秒，记录警告）
+- [X] T055 实现调试独立性保证 src/runtime/debug_server.c（调试会话中断时控制逻辑继续运行）
 
 ### Python 调试支持
 
-- [ ] T056 [P] 创建调试服务器启动脚本 python/debug_server.py（import debugpy, debugpy.listen(), 等待连接）
-- [ ] T057 [P] 添加调试配置到示例 config/pid_temperature_debug.yaml（启用调试，设置主机和端口）
+- [X] T056 [P] 创建调试服务器启动脚本 python/debug_server.py（import debugpy, debugpy.listen(), 等待连接）
+- [X] T057 [P] 添加调试配置到示例 config/pid_temperature_debug.yaml（启用调试，设置主机和端口）
 
 ### 文档
 
-- [ ] T058 [P] 创建调试配置指南 docs/debugging.md（VS Code launch.json 配置，连接步骤，常见问题）
-- [ ] T059 [P] 添加调试示例截图 docs/debugging.md（断点设置、变量查看、单步执行）
+- [X] T058 [P] 创建调试配置指南 docs/debugging.md（VS Code launch.json 配置，连接步骤，常见问题）
+- [X] T059 [P] 添加调试示例截图 docs/debugging.md（断点设置、变量查看、单步执行）
 
 **检查点**: 用户故事 3 完成，可以远程调试 Python 控制脚本
 
@@ -176,15 +176,15 @@
 
 ### 错误处理和健壮性
 
-- [ ] T060 [P] 实现所有 C 函数的空指针检查（NULL pointer guard）
-- [ ] T061 [P] 实现内存泄漏检测 tests/memory_leak_test.sh（运行 24 小时，监控内存增长）
-- [ ] T062 [P] 实现 Python 脚本加载失败处理 src/runtime/py_embed.c（脚本不存在或语法错误时优雅退出）
+- [X] T060 [P] 实现所有 C 函数的空指针检查（NULL pointer guard）
+- [X] T061 [P] 实现内存泄漏检测 tests/memory_leak_test.sh（运行 24 小时，监控内存增长）
+- [X] T062 [P] 实现 Python 脚本加载失败处理 src/runtime/py_embed.c（脚本不存在或语法错误时优雅退出）
 
 ### 性能优化
 
-- [ ] T063 [P] 优化 PID 计算性能 src/function_blocks/fb_pid.c（避免重复计算，内联关键函数）
-- [ ] T064 [P] 实现 CPU 亲和性设置 src/runtime/scheduler.c（根据配置绑定到指定 CPU 核心）
-- [ ] T065 [P] 实现周期稳定性基准测试 tests/benchmark/cycle_stability.py（测量 95% 周期在 ±5% 范围内）
+- [X] T063 [P] 优化 PID 计算性能 src/function_blocks/fb_pid.c（避免重复计算，内联关键函数）
+- [X] T064 [P] 实现 CPU 亲和性设置 src/runtime/scheduler.c（根据配置绑定到指定 CPU 核心）
+- [X] T065 [P] 实现周期稳定性基准测试 tests/benchmark/cycle_stability.py（测量 95% 周期在 ±5% 范围内）
 
 ### 文档完善
 

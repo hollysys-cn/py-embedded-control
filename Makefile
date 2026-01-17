@@ -15,6 +15,8 @@ src/runtime/logger.c \
 src/runtime/config_loader.c \
 src/runtime/py_embed.c \
 src/runtime/scheduler.c \
+src/runtime/debug_session.c \
+src/runtime/debug_server.c \
 src/function_blocks/fb_common.c \
 src/function_blocks/fb_pid.c \
 src/function_blocks/fb_first_order.c \

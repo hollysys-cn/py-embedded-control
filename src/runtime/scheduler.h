@@ -73,4 +73,14 @@ const SchedulerStats* scheduler_get_stats(const SchedulerContext* ctx);
  */
 void scheduler_stop(SchedulerContext* ctx);
 
+/**
+ * @brief 设置 CPU 亲和性（绑定到指定 CPU 核心）
+ * @param cpu_core CPU 核心编号（0 开始），-1 表示不绑定
+ * @return 0 成功，-1 失败
+ *
+ * @note 仅在 Linux 系统上支持
+ * @note 需要足够的权限（或 CAP_SYS_NICE capability）
+ */
+int scheduler_set_cpu_affinity(int cpu_core);
+
 #endif // SCHEDULER_H

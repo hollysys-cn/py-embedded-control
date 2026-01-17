@@ -70,7 +70,6 @@ double pid_compute(PIDFunctionBlock* pid, double SP, double PV, double dt) {
 
     // 计算误差
     double error = SP - PV;
-    pid->last_error = error;
 
     // 如果 dt 为 0，自动计算时间差
     if (dt <= 0.0) {
@@ -87,31 +86,28 @@ double pid_compute(PIDFunctionBlock* pid, double SP, double PV, double dt) {
         pid->base.last_update_time = current_time;
     }
 
-    // 比例项
-    double P = pid->params.Kp * error;
+    // 比例项（直接计算，避免临时变量）
+    double output = pid->params.Kp * error;
 
-    // 积分项
+    // 积分项（累积误差）
     pid->state.integral += error * dt;
-    double I = pid->params.Ki * pid->state.integral;
+    output += pid->params.Ki * pid->state.integral;
 
-    // 微分项
-    double D = 0.0;
+    // 微分项（基于误差变化率）
     if (dt > 0.0) {
         double derivative = (error - pid->state.prev_error) / dt;
-        D = pid->params.Kd * derivative;
+        output += pid->params.Kd * derivative;
     }
 
-    // 更新状态
+    // 更新状态（最小化写操作）
     pid->state.prev_error = error;
+    pid->last_error = error;
 
-    // 计算输出
-    double output = P + I + D;
-
-    // 输出限幅
+    // 输出限幅（内联函数）
     double limited_output = clamp(output, pid->params.output_min, pid->params.output_max);
 
-    // 抗积分饱和（如果输出饱和，停止积分累积）
-    if (limited_output != output && pid->params.Ki > 0.0) {
+    // 抗积分饱和（仅在输出饱和且启用积分时执行）
+    if (__builtin_expect(limited_output != output && pid->params.Ki > 0.0, 0)) {
         pid->state.integral -= error * dt;  // 回退积分
     }
 

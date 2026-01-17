@@ -1,0 +1,53 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: 附加到运行时（本地）",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python",
+                    "remoteRoot": "${workspaceFolder}/python"
+                }
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Python: 附加到 Docker 容器",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/workspace"
+                }
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Python: 附加到远程设备",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "192.168.1.100",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python",
+                    "remoteRoot": "/opt/plcopen/python"
+                }
+            ],
+            "justMyCode": false
+        }
+    ]
+}
