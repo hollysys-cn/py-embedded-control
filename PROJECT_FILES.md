@@ -47,7 +47,14 @@
 | `run.ps1` | Windows 运行脚本 | ⚠️ 待弃用 |
 | `run.bat` | Windows 批处理包装器 | ⚠️ 待弃用 |
 | `debug*.ps1` | Windows 调试脚本 | ⚠️ 待移除 |
-| `scripts/` | 辅助脚本目录（版权检查、验证等）| ✅ 活跃 |
+
+### 辅助脚本 (scripts/)
+
+| 文件 | 说明 | 状态 |
+|------|------|------|
+| `scripts/add_copyright.sh` | 批量添加版权头到源文件 | ✅ 活跃 |
+| `scripts/verify_comments.sh` | 验证中文注释覆盖率 | ✅ 活跃 |
+| `scripts/verify_encoding.sh` | 验证文件编码和行尾 | ✅ 活跃 |
 
 ### 配置目录
 
