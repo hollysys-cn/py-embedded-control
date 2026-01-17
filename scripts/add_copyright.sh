@@ -82,7 +82,7 @@ add_c_copyright() {
     # 检查文件是否已有版权头
     if grep -q "Copyright (c) [0-9]\{4\}" "$file"; then
         echo "  跳过: 文件已包含版权信息"
-        ((total_skipped++))
+        total_skipped=$((total_skipped + 1))
         return
     fi
 
@@ -97,7 +97,7 @@ add_c_copyright() {
     mv "$temp_file" "$file"
 
     echo -e "  ${GREEN}完成: 已添加版权头${RESET}"
-    ((total_added++))
+    total_added=$((total_added + 1))
 }
 
 # 添加版权头到 Python 文件
@@ -109,7 +109,7 @@ add_python_copyright() {
     # 检查文件是否已有版权头
     if grep -q "Copyright (c) [0-9]\{4\}" "$file"; then
         echo "  跳过: 文件已包含版权信息"
-        ((total_skipped++))
+        total_skipped=$((total_skipped + 1))
         return
     fi
 
@@ -135,7 +135,7 @@ add_python_copyright() {
     mv "$temp_file" "$file"
 
     echo -e "  ${GREEN}完成: 已添加版权头${RESET}"
-    ((total_added++))
+    total_added=$((total_added + 1))
 }
 
 # 主程序
@@ -147,7 +147,7 @@ echo "=== 处理 C 源文件 (.c) ==="
 if [ -d "src" ]; then
     while IFS= read -r -d '' file; do
         add_c_copyright "$file"
-        ((total_processed++))
+        total_processed=$((total_processed + 1))
     done < <(find src -type f -name "*.c" -print0)
 fi
 echo ""
@@ -157,7 +157,7 @@ echo "=== 处理 C 头文件 (.h) ==="
 if [ -d "src" ]; then
     while IFS= read -r -d '' file; do
         add_c_copyright "$file"
-        ((total_processed++))
+        total_processed=$((total_processed + 1))
     done < <(find src -type f -name "*.h" -print0)
 fi
 echo ""
@@ -167,7 +167,7 @@ echo "=== 处理 Python 文件 (.py) ==="
 if [ -d "python" ]; then
     while IFS= read -r -d '' file; do
         add_python_copyright "$file"
-        ((total_processed++))
+        total_processed=$((total_processed + 1))
     done < <(find python -type f -name "*.py" -print0)
 fi
 echo ""
