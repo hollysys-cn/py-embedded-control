@@ -2,8 +2,8 @@
 
 > ⚠️ **重要变更**: 项目已从 PowerShell 迁移到 Bash 脚本。详见 [MIGRATION_FROM_POWERSHELL.md](../../MIGRATION_FROM_POWERSHELL.md)
 
-**日期**: 2026年1月18日  
-**系统**: Windows 11 + Git Bash  
+**日期**: 2026年1月18日
+**系统**: Windows 11 + Git Bash
 **检测状态**: ✅ 基础环境完整
 
 ## 环境检测结果
@@ -344,6 +344,6 @@ docker-compose build --parallel
 
 ---
 
-**环境状态**: ✅ 完全就绪  
-**下一步**: 在 Git Bash 中运行 `./build.sh && ./run.sh` 启动示例程序  
+**环境状态**: ✅ 完全就绪
+**下一步**: 在 Git Bash 中运行 `./build.sh && ./run.sh` 启动示例程序
 **迁移说明**: 见 [MIGRATION_FROM_POWERSHELL.md](../../MIGRATION_FROM_POWERSHELL.md)
