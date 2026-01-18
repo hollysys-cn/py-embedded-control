@@ -111,7 +111,10 @@ main() {
 
     # 运行应用
     info "使用配置文件启动应用: $config_file"
-    docker exec -it plcopen-dev python3 /workspace/python/examples/pid_temperature.py
+
+    # 使用 MSYS_NO_PATHCONV 避免 Git Bash 在 Windows 上转换路径
+    MSYS_NO_PATHCONV=1 docker exec -it plcopen-dev bash -c \
+        "cd /workspace && python3 python/examples/pid_temperature.py --config $config_file"
 
     exit 0
 }
