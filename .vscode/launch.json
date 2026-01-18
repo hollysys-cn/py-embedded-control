@@ -15,7 +15,7 @@
                     "remoteRoot": "/workspace"
                 }
             ],
-            "justMyCode": false,
+            "justMyCode": true,
             "logToFile": true
         },
         {
@@ -24,7 +24,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/python/examples/pid_temperature.py",
             "console": "integratedTerminal",
-            "justMyCode": false,
+            "justMyCode": true,
+            "logToFile": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/python"
             }
